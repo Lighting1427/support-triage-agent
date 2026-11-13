@@ -50,7 +50,7 @@ def test_wrong_action_missing_team_and_wrong_language_are_reported(cases, ideal_
         update={
             "action": NextAction.ESCALATE_TO_HUMAN,
             "route_to": [Team.PRODUCT],
-            "draft_reply": "สวัสดีครับ", 
+            "draft_reply": "สวัสดีครับ",
         }
     )
     outcome = ideal_t3_outcome.model_copy(update={"result": wrong})

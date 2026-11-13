@@ -25,16 +25,16 @@ def build_graph(
 ) -> CompiledStateGraph:
     graph = StateGraph(TriageState)
 
-    graph.add_node("preprocess", preprocess) 
-    graph.add_node("investigate", make_investigate_node(investigator))  
-    graph.add_node("tools", ToolNode(tools, handle_tool_errors=handle_tool_error))  
-    graph.add_node("decide", make_decide_node(decider)) 
-    graph.add_node("apply_policy", apply_policy)  
+    graph.add_node("preprocess", preprocess)
+    graph.add_node("investigate", make_investigate_node(investigator))
+    graph.add_node("tools", ToolNode(tools, handle_tool_errors=handle_tool_error))
+    graph.add_node("decide", make_decide_node(decider))
+    graph.add_node("apply_policy", apply_policy)
 
     graph.add_edge(START, "preprocess")
     graph.add_edge("preprocess", "investigate")
     graph.add_conditional_edges("investigate", tools_condition, {"tools": "tools", END: "decide"})
-    graph.add_edge("tools", "investigate")  
+    graph.add_edge("tools", "investigate")
     graph.add_edge("decide", "apply_policy")
     graph.add_edge("apply_policy", END)
 

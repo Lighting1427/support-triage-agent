@@ -91,6 +91,7 @@ accounts at risk), general_support (anything else).
 what the customer needs, and the recommended next step.
 """
 
+
 def _ago(minutes: int) -> str:
     # 2880 -> "2d 0h ago", 180 -> "3h 0m ago", 45 -> "45m ago"
     days, rest = divmod(minutes, 60 * 24)
@@ -103,8 +104,7 @@ def _ago(minutes: int) -> str:
 
 
 def render_ticket(ticket: Ticket, facts: TicketFacts, now: datetime) -> str:
-    """สร้างข้อความ ticket สำหรับ LLM
-    """
+    """สร้างข้อความ ticket สำหรับ LLM"""
     lines = [
         f'<ticket id="{ticket.ticket_id}" customer_id="{ticket.customer_id}" '
         f'channel="{ticket.channel}">'
@@ -119,6 +119,7 @@ def render_ticket(ticket: Ticket, facts: TicketFacts, now: datetime) -> str:
     lines.extend(f"{name}: {value}" for name, value in facts.model_dump().items())
     lines.append("</computed_facts>")
     return "\n".join(lines)
+
 
 def render_evidence(messages: Sequence[AnyMessage]) -> str:
     """แปลงบทสนทนาช่วง investigate เป็นข้อความหลักฐานก้อนเดียวให้ node decide อ่าน

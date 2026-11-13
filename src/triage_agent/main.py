@@ -53,10 +53,10 @@ def format_outcome(outcome: TicketOutcome) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
-    load_dotenv() 
+    load_dotenv()
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING)
     if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")  
+        sys.stdout.reconfigure(encoding="utf-8")
 
     if not os.getenv("OPENAI_API_KEY"):
         print("OPENAI_API_KEY is not set. Copy .env.example to .env and add your key.")

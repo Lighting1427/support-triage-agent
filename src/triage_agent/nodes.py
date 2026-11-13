@@ -20,12 +20,13 @@ logger = logging.getLogger(__name__)
 ChatRunnable = Runnable[LanguageModelInput, BaseMessage]
 DecisionRunnable = Runnable[LanguageModelInput, TriageResult]
 
+
 def _minutes(later: datetime, earlier: datetime) -> int:
     return int((later - earlier).total_seconds() // 60)
 
 
 def compute_facts(ticket: Ticket, now: datetime) -> TicketFacts:
-    """คำนวณข้อเท็จจริงเรื่องเวลาและจำนวนข้อความ """
+    """คำนวณข้อเท็จจริงเรื่องเวลาและจำนวนข้อความ"""
     customer_messages = [m for m in ticket.messages if m.author is Author.CUSTOMER]
     support_times = [m.sent_at for m in ticket.messages if m.author is Author.SUPPORT]
     last_support_reply = max(support_times, default=None)
@@ -87,8 +88,6 @@ def make_decide_node(decider: DecisionRunnable) -> Callable[[TriageState], dict]
 
 
 def handle_tool_error(error: Exception) -> str:
-    """bug ที่ไม่คาดคิดใน tool: log รายละเอียดไว้ให้ dev แต่บอก LLM แค่ข้อความกลางๆ
-
-    """
+    """bug ที่ไม่คาดคิดใน tool: log รายละเอียดไว้ให้ dev แต่บอก LLM แค่ข้อความกลางๆ"""
     logger.error("Tool failed unexpectedly: %r", error)
     return "Tool failed unexpectedly. Do not retry it; continue with the evidence you have."

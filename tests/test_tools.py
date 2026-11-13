@@ -12,12 +12,13 @@ def call(tools: dict, name: str, **arguments) -> dict:
     """เรียก tool ด้วยชื่อ แล้วแปลง JSON ที่ LLM จะได้เห็น กลับเป็น dict เพื่อ assert"""
     return json.loads(tools[name].invoke(arguments))
 
+
 def test_customer_profile_includes_plan_and_tenure(tools):
     result = call(tools, "get_customer_profile", customer_id="C-002")
 
     assert result["customer"]["plan"] == "enterprise"
     assert result["customer"]["seats"] == 45
-    assert result["tenure_months"] == 8  
+    assert result["tenure_months"] == 8
 
 
 def test_customer_profile_unknown_id_returns_error(tools):
@@ -25,10 +26,11 @@ def test_customer_profile_unknown_id_returns_error(tools):
 
     assert "No customer found" in result["error"]
 
+
 def test_billing_flags_duplicate_charges_for_ticket_1(tools):
     result = call(tools, "get_billing_transactions", customer_id="C-001")
 
-    assert result["subscription_plan"] == "free"  
+    assert result["subscription_plan"] == "free"
     assert result["captured_total"] == "59.98"
     assert result["pending_total"] == "29.99"
     assert result["possible_duplicate_transaction_ids"] == ["TX-9002", "TX-9003"]

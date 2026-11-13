@@ -8,10 +8,11 @@ from langchain_core.tools import BaseTool, tool
 from triage_agent.data import KnowledgeBase, MockDataStore
 from triage_agent.models import ChargeStatus, ComponentStatus, Health, Transaction
 
-KB_TOP_K = 3 
-DUPLICATE_WINDOW = timedelta(hours=24)  
-GLOBAL_REGION = "global"  
+KB_TOP_K = 3
+DUPLICATE_WINDOW = timedelta(hours=24)
+GLOBAL_REGION = "global"
 _ACTIVE_CHARGE_STATUSES = {ChargeStatus.CAPTURED, ChargeStatus.PENDING}
+
 
 def months_between(start: date, end: date) -> int:
     """นับเดือนเต็ม: 12 มี.ค. -> 12 พ.ย. = 8 เดือน, 12 มี.ค. -> 11 พ.ย. = 7 เดือน"""
@@ -22,8 +23,7 @@ def months_between(start: date, end: date) -> int:
 
 
 def find_possible_duplicates(transactions: list[Transaction]) -> list[str]:
-    """หา ID ของรายการที่ตัดเงินซ้ำกับรายการก่อนหน้า (จำนวนเท่ากัน ห่างไม่เกิน DUPLICATE_WINDOW)
-    """
+    """หา ID ของรายการที่ตัดเงินซ้ำกับรายการก่อนหน้า (จำนวนเท่ากัน ห่างไม่เกิน DUPLICATE_WINDOW)"""
     active = sorted(
         (t for t in transactions if t.status in _ACTIVE_CHARGE_STATUSES),
         key=lambda t: t.created_at,
@@ -35,7 +35,7 @@ def find_possible_duplicates(transactions: list[Transaction]) -> list[str]:
             close_in_time = later.created_at - earlier.created_at <= DUPLICATE_WINDOW
             if same_amount and close_in_time:
                 duplicates.append(later.transaction_id)
-                break  
+                break
     return duplicates
 
 
@@ -56,6 +56,7 @@ def _to_json(data: Any) -> str:
 
 def _error(message: str) -> str:
     return _to_json({"error": message})
+
 
 def build_tools(store: MockDataStore, kb: KnowledgeBase, today: date) -> list[BaseTool]:
     @tool
@@ -87,7 +88,7 @@ def build_tools(store: MockDataStore, kb: KnowledgeBase, today: date) -> list[Ba
         hits = kb.search(query, top_k=KB_TOP_K)
         return _to_json(
             {
-                "query": query, 
+                "query": query,
                 "results": [
                     {
                         "article_id": article.article_id,
@@ -131,7 +132,7 @@ def build_tools(store: MockDataStore, kb: KnowledgeBase, today: date) -> list[Ba
         """Check INTERNAL monitoring (health, 5xx error rate, open incidents) for a region
         plus global components. More reliable than the public status page.
         Use for errors, outages, slowness or access problems."""
-        query = region.strip().lower() 
+        query = region.strip().lower()
         statuses = store.service_statuses()
         regional = [s for s in statuses if s.region.startswith(query)]
         if not regional:

@@ -15,7 +15,7 @@ from triage_agent.models import (
 )
 from triage_agent.state import TriageState
 
-MIN_CONFIDENCE = 0.6  
+MIN_CONFIDENCE = 0.6
 
 _ACTION_LEVEL = {
     NextAction.AUTO_RESPOND: 0,
@@ -33,6 +33,7 @@ class PolicyContext:
 
 
 Rule = Callable[[TriageResult, PolicyContext], TriageResult | None]
+
 
 def _at_least(result: TriageResult, action: NextAction) -> TriageResult:
     if _ACTION_LEVEL[result.action] >= _ACTION_LEVEL[action]:
@@ -110,7 +111,7 @@ def handoff_needs_a_team(result: TriageResult, ctx: PolicyContext) -> TriageResu
 
 
 DEFAULT_RULES: tuple[Rule, ...] = (
-    drop_unknown_kb_articles, 
+    drop_unknown_kb_articles,
     critical_requires_human,
     chargeback_or_legal_threat_requires_human,
     low_confidence_requires_human,
@@ -118,7 +119,7 @@ DEFAULT_RULES: tuple[Rule, ...] = (
     urgent_outage_pages_oncall,
     urgent_enterprise_notifies_account_manager,
     auto_respond_requires_kb_evidence,
-    handoff_needs_a_team, 
+    handoff_needs_a_team,
 )
 
 

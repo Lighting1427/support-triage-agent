@@ -45,7 +45,7 @@ def triage_ticket(
             {"ticket": ticket, "reference_time": reference_time},
             config={"recursion_limit": recursion_limit},
         )
-    except Exception as exc:  
+    except Exception as exc:
         logger.exception("Triage failed for %s", ticket.ticket_id)
         return TicketOutcome(
             ticket_id=ticket.ticket_id,

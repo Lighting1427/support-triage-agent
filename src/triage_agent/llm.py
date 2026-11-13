@@ -9,10 +9,10 @@ from triage_agent.nodes import ChatRunnable, DecisionRunnable
 
 
 def create_investigator(settings: Settings, tools: Sequence[BaseTool]) -> ChatRunnable:
-    llm = ChatOpenAI(model=settings.openai_model)  
+    llm = ChatOpenAI(model=settings.openai_model)
     return llm.bind_tools(
         tools,
-        strict=True, 
+        strict=True,
         parallel_tool_calls=False,
     )
 

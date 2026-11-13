@@ -22,6 +22,7 @@ def run(store, kb, tickets, now, make_result):
 
     คืน (state, prompts) โดย prompts = message ที่ decider ได้รับ ใช้ตรวจว่า decide เห็นหลักฐานครบ
     """
+
     def _run(investigator_responses, tools, decision=None):
         prompts = []
 
@@ -61,7 +62,7 @@ def test_full_flow_investigates_decides_and_applies_policy(run, tools, make_resu
     assert "possible_duplicate_transaction_ids" in decide_input
     assert "Evidence summary" in decide_input
 
-    assert state["triage"] == llm_decision 
+    assert state["triage"] == llm_decision
     assert state["final"].action is NextAction.ROUTE_TO_SPECIALIST
     assert Team.BILLING in state["final"].route_to
     assert state["policy_overrides"] == ["billing_never_auto_responds"]
@@ -70,8 +71,8 @@ def test_full_flow_investigates_decides_and_applies_policy(run, tools, make_resu
 def test_goes_straight_to_decide_when_llm_calls_no_tool(run, tools):
     state, prompts = run(iter(["Nothing to check"]), list(tools.values()))
 
-    assert len(state["messages"]) == 3  
-    assert len(prompts) == 1 
+    assert len(state["messages"]) == 3
+    assert len(prompts) == 1
     assert "final" in state
 
 
@@ -85,14 +86,11 @@ def test_crashing_tool_becomes_safe_error_message(run):
 
     error = next(m for m in state["messages"] if isinstance(m, ToolMessage))
     assert "failed unexpectedly" in error.content
-    assert "hunter2" not in error.content 
+    assert "hunter2" not in error.content
 
 
 def test_recursion_limit_stops_an_agent_that_never_stops_calling_tools(run, tools):
-    endless = (
-        _ask_for_tool("get_customer_profile", customer_id="C-001")
-        for _ in repeat(None)
-    )
+    endless = (_ask_for_tool("get_customer_profile", customer_id="C-001") for _ in repeat(None))
 
     with pytest.raises(GraphRecursionError):
         run(endless, list(tools.values()))

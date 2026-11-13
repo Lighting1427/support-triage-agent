@@ -14,7 +14,7 @@ SAMPLE_CALLS = [
     ("get_billing_transactions", {"customer_id": "C-001"}),
     ("check_service_status", {"region": "Asia"}),
     ("search_knowledge_base", {"query": "dark mode macos system default"}),
-    ("check_service_status", {"region": "europe"}), 
+    ("check_service_status", {"region": "europe"}),
 ]
 
 

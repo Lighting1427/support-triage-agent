@@ -17,9 +17,10 @@ from triage_agent.models import (
 from triage_agent.tools import build_tools
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-FIXED_TODAY = date(2026, 11, 12)  
+FIXED_TODAY = date(2026, 11, 12)
 
-@pytest.fixture(scope="session") 
+
+@pytest.fixture(scope="session")
 def store() -> MockDataStore:
     return MockDataStore(DATA_DIR)
 
@@ -41,12 +42,13 @@ def dataset():
 
 @pytest.fixture(scope="session")
 def now(dataset):
-    return dataset.reference_time 
+    return dataset.reference_time
 
 
 @pytest.fixture(scope="session")
 def tickets(dataset) -> dict:
     return {t.ticket_id: t for t in dataset.tickets}
+
 
 @pytest.fixture
 def make_result():

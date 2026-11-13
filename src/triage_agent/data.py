@@ -24,8 +24,7 @@ def load_tickets(path: Path) -> TicketDataset:
 
 
 class MockDataStore:
-    """ข้อมูลลูกค้า, billing และ service status ที่ tool ใช้ค้นหา
-    """
+    """ข้อมูลลูกค้า, billing และ service status ที่ tool ใช้ค้นหา"""
 
     def __init__(self, data_dir: Path) -> None:
         customers = TypeAdapter(list[Customer]).validate_python(
@@ -47,7 +46,7 @@ class MockDataStore:
         return self._billing.get(customer_id)
 
     def service_statuses(self) -> list[ComponentStatus]:
-        return list(self._statuses) 
+        return list(self._statuses)
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +62,7 @@ def tokenize(text: str) -> list[str]:
 
 
 class KnowledgeBase:
-    """ค้นบทความด้วย BM25 
+    """ค้นบทความด้วย BM25
 
     เลือก BM25 แทน vector search เพราะ KB มีแค่ 10 บทความ
     """

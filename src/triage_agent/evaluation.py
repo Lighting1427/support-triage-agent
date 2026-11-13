@@ -6,18 +6,18 @@ from pydantic import BaseModel
 
 from triage_agent.models import IssueType, NextAction, Team, TicketOutcome, Urgency
 
-_THAI_CHARACTERS = re.compile(r"[\u0E00-\u0E7F]") 
+_THAI_CHARACTERS = re.compile(r"[\u0E00-\u0E7F]")
 
 
 class GoldenCase(BaseModel):
     ticket_id: str
-    allowed_urgency: list[Urgency]  
+    allowed_urgency: list[Urgency]
     expected_action: NextAction
     required_teams: list[Team]
     required_issue_types: list[IssueType]
-    kb_any_of: list[str]  
+    kb_any_of: list[str]
     required_tools: list[str]
-    reply_language: str  
+    reply_language: str
     note: str = ""
 
 
@@ -88,7 +88,7 @@ DEFAULT_CHECKS: tuple[Check, ...] = (
 def evaluate(
     case: GoldenCase, outcome: TicketOutcome, checks: tuple[Check, ...] = DEFAULT_CHECKS
 ) -> list[CheckResult]:
-    if outcome.result is None:  
+    if outcome.result is None:
         names = [check.__name__.removeprefix("check_") for check in checks]
         return [CheckResult(name, False, "agent failed") for name in names]
     return [check(case, outcome) for check in checks]

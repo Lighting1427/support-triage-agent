@@ -1,24 +1,31 @@
 from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field
+
 
 class _Frozen(BaseModel):
     """Base ของข้อมูลที่ห้ามแก้หลังโหลดแล้ว (immutable) กัน โค้ดอื่นเผลอแก้ค่า"""
+
     model_config = ConfigDict(frozen=True)
+
 
 # ----------------------------------
 # Input: ticket ลูกค้าส่งเข้ามา
 # ----------------------------------
 
+
 class Author(StrEnum):
     CUSTOMER = "customer"
     SUPPORT = "support"
 
+
 class Message(_Frozen):
     author: Author = Author.CUSTOMER
     sent_at: datetime
-    text: str 
+    text: str
+
 
 class Ticket(_Frozen):
     """แชทของ ticket หนึ่งใบ มีเฉพาะสิ่งที่ลูกค้าส่งมาเท่านั้น
@@ -26,10 +33,12 @@ class Ticket(_Frozen):
     จะไม่ใส่ข้อมูลลูกค้า (plan, seats, region) ไว้ที่นี่
     agent ต้องเรียก tool เพื่อหาเอง
     """
-    ticket_id: str 
-    customer_id: str 
+
+    ticket_id: str
+    customer_id: str
     channel: str = "email"
     messages: list[Message] = Field(min_length=1)
+
 
 class TicketDataset(_Frozen):
     """ticket หลายใบ + เวลา "Now" แบบตายตัว เพื่อให้ demo และ test ได้แบบเดิม"""
@@ -37,16 +46,19 @@ class TicketDataset(_Frozen):
     reference_time: datetime
     tickets: list[Ticket]
 
+
 class Plan(StrEnum):
     FREE = "free"
     PRO = "pro"
     ENTERPRISE = "enterprise"
 
+
 class PastTicket(_Frozen):
-    ticket_id: str 
-    subject: str 
-    urgency: str 
-    resolved: bool 
+    ticket_id: str
+    subject: str
+    urgency: str
+    resolved: bool
+
 
 class Customer(_Frozen):
     customer_id: str
@@ -61,31 +73,36 @@ class Customer(_Frozen):
     support_history: list[PastTicket] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
 
+
 class ChargeStatus(StrEnum):
     PENDING = "pending"
     CAPTURED = "captured"
     FAILED = "failed"
     REFUNDED = "refunded"
 
+
 class Transaction(_Frozen):
     transaction_id: str
     created_at: datetime
-    amount: Decimal 
+    amount: Decimal
     currency: str = "USD"
     status: ChargeStatus
     description: str
     card_last4: str
 
+
 class BillingAccount(_Frozen):
     customer_id: str
-    subscription_plan: Plan  
+    subscription_plan: Plan
     last_provisioning_error: str | None = None
     transactions: list[Transaction] = Field(default_factory=list)
+
 
 class Health(StrEnum):
     OPERATIONAL = "operational"
     DEGRADED = "degraded"
     OUTAGE = "outage"
+
 
 class ComponentStatus(_Frozen):
     """ข้อมูลภายใน อาจไม่ตรงกับ status ที่ลูกค้าเห็น"""
@@ -98,6 +115,7 @@ class ComponentStatus(_Frozen):
     public_status_page: Health
     open_incident_id: str | None = None
 
+
 class KBArticle(_Frozen):
     article_id: str
     title: str
@@ -105,12 +123,14 @@ class KBArticle(_Frozen):
     tags: list[str] = Field(default_factory=list)
     content: str
 
+
 class TicketFacts(_Frozen):
     customer_message_count: int
     minutes_since_first_message: int
-    unanswered_customer_messages: int  
-    minutes_waiting_for_reply: int  
+    unanswered_customer_messages: int
+    minutes_waiting_for_reply: int
     has_support_replied: bool
+
 
 class Urgency(StrEnum):
     CRITICAL = "critical"
@@ -120,9 +140,9 @@ class Urgency(StrEnum):
 
 
 class NextAction(StrEnum):
-    AUTO_RESPOND = "auto_respond"  
-    ROUTE_TO_SPECIALIST = "route_to_specialist"  
-    ESCALATE_TO_HUMAN = "escalate_to_human"  
+    AUTO_RESPOND = "auto_respond"
+    ROUTE_TO_SPECIALIST = "route_to_specialist"
+    ESCALATE_TO_HUMAN = "escalate_to_human"
 
 
 class Team(StrEnum):
@@ -136,7 +156,7 @@ class Team(StrEnum):
 
 class IssueType(StrEnum):
     BILLING = "billing"
-    SERVICE_OUTAGE = "service_outage" 
+    SERVICE_OUTAGE = "service_outage"
     BUG = "bug"
     FEATURE_REQUEST = "feature_request"
     HOW_TO = "how_to"
@@ -146,7 +166,7 @@ class IssueType(StrEnum):
 class BusinessRisk(StrEnum):
     CHARGEBACK_OR_LEGAL_THREAT = "chargeback_or_legal_threat"
     CHURN_RISK = "churn_risk"
-    CUSTOMER_REVENUE_AT_RISK = "customer_revenue_at_risk" 
+    CUSTOMER_REVENUE_AT_RISK = "customer_revenue_at_risk"
 
 
 class SentimentLabel(StrEnum):
@@ -204,13 +224,14 @@ class TriageResult(BaseModel):
     internal_note: str = Field(description="Short summary for the human support agent.")
     confidence: float = Field(ge=0, le=1, description="Confidence in this decision, 0 to 1.")
 
+
 class TicketOutcome(BaseModel):
-    """ผลลัพธ์ของ ticket หนึ่งใบ ทั้งกรณีสำเร็จและกรณี agent พัง """
+    """ผลลัพธ์ของ ticket หนึ่งใบ ทั้งกรณีสำเร็จและกรณี agent พัง"""
 
     ticket_id: str
-    action: NextAction  
-    result: TriageResult | None = None  
-    llm_result: TriageResult | None = None 
+    action: NextAction
+    result: TriageResult | None = None
+    llm_result: TriageResult | None = None
     policy_overrides: list[str] = Field(default_factory=list)
-    tool_calls: list[str] = Field(default_factory=list)  
+    tool_calls: list[str] = Field(default_factory=list)
     error: str | None = None

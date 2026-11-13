@@ -10,7 +10,7 @@ from triage_agent.tools import build_tools
 
 
 def main() -> None:
-    load_dotenv()  
+    load_dotenv()
     settings = Settings.from_env()
     dataset = load_tickets(settings.data_dir / "tickets.json")
 
@@ -30,7 +30,7 @@ def main() -> None:
             {"ticket": ticket, "reference_time": dataset.reference_time},
             config={"recursion_limit": settings.recursion_limit},
         )
-        for message in state["messages"][1:]: 
+        for message in state["messages"][1:]:
             message.pretty_print()
 
 
