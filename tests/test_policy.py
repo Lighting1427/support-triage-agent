@@ -114,6 +114,44 @@ def test_handoff_without_team_goes_to_general_support(make_result, ctx_for):
     assert applied == ["handoff_needs_a_team"]
 
 
+@pytest.mark.parametrize(
+    ("ticket_id", "reply", "needs_review"),
+    [
+        ("T-1003", "Hi! Use the web app instead.", False),
+        ("T-1003", "สวัสดีครับ ลองใช้เว็บแทนครับ", True),
+        ("T-1003", "Hi! ลองใช้เว็บแทนครับ", True),
+        ("T-1002", "ลองใช้เว็บแทนครับ", False),
+        ("T-1002", "Hi! Use the web app instead.", True),
+        ("T-1003", "   ", True),
+        ("T-1002", "", True),
+    ],
+)
+def test_wrong_language_blocks_auto_response(make_result, ctx_for, ticket_id, reply, needs_review):
+    result = make_result(draft_reply=reply, route_to=[Team.ENGINEERING])
+
+    final, applied = apply_rules(result, ctx_for(ticket_id))
+
+    if needs_review:
+        assert final.action is NextAction.ROUTE_TO_SPECIALIST
+        assert set(final.route_to) == {Team.ENGINEERING, Team.GENERAL_SUPPORT}
+        assert applied == ["wrong_reply_language_needs_review"]
+    else:
+        assert final == result
+        assert applied == []
+    assert final.draft_reply == reply
+    assert result.action is NextAction.AUTO_RESPOND
+
+
+@pytest.mark.parametrize("action", [NextAction.ROUTE_TO_SPECIALIST, NextAction.ESCALATE_TO_HUMAN])
+def test_wrong_language_preserves_existing_human_review(make_result, ctx_for, action):
+    result = make_result(action=action, draft_reply="สวัสดีครับ", route_to=[Team.ENGINEERING])
+
+    final, applied = apply_rules(result, ctx_for("T-1003"))
+
+    assert final == result
+    assert applied == []
+
+
 @pytest.mark.parametrize("rule", DEFAULT_RULES, ids=lambda r: r.__name__)
 @pytest.mark.parametrize("action", list(NextAction))
 def test_no_rule_ever_makes_a_decision_less_safe(make_result, ctx_for, rule, action):

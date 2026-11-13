@@ -2,6 +2,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 from triage_agent.data import MockDataStore
+from triage_agent.language import reply_matches_language
 from triage_agent.models import (
     BusinessRisk,
     Customer,
@@ -104,6 +105,18 @@ def auto_respond_requires_kb_evidence(
     return None
 
 
+def wrong_reply_language_needs_review(
+    result: TriageResult, ctx: PolicyContext
+) -> TriageResult | None:
+    # คำตอบที่จะส่งอัตโนมัติต้องเป็นภาษาเดียวกับที่ลูกค้าเขียนและต้องไม่ว่าง
+    # ส่วน action อื่นมีคนอ่านก่อนส่งอยู่แล้ว จึงไม่ต้องบังคับ
+    if result.action is NextAction.AUTO_RESPOND and not reply_matches_language(
+        result.draft_reply, ctx.facts.reply_language
+    ):
+        return _with_teams(_at_least(result, NextAction.ROUTE_TO_SPECIALIST), Team.GENERAL_SUPPORT)
+    return None
+
+
 def handoff_needs_a_team(result: TriageResult, ctx: PolicyContext) -> TriageResult | None:
     if result.action is not NextAction.AUTO_RESPOND and not result.route_to:
         return _with_teams(result, Team.GENERAL_SUPPORT)
@@ -119,6 +132,7 @@ DEFAULT_RULES: tuple[Rule, ...] = (
     urgent_outage_pages_oncall,
     urgent_enterprise_notifies_account_manager,
     auto_respond_requires_kb_evidence,
+    wrong_reply_language_needs_review,
     handoff_needs_a_team,
 )
 

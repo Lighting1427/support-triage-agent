@@ -1,0 +1,273 @@
+[
+  {
+    "ticket_id": "T-1001",
+    "action": "escalate_to_human",
+    "result": {
+      "urgency": "high",
+      "urgency_reasoning": "The customer is blocked from paid Pro export functionality with a presentation deadline in two hours, and billing records confirm $59.98 in captured charges plus a possible duplicate and a pending $29.99 transaction. The customer also threatens a bank dispute, so a human needs to act now.",
+      "extracted": {
+        "product_area": "billing",
+        "issue_types": [
+          "billing",
+          "bug"
+        ],
+        "sentiment": {
+          "label": "angry",
+          "trend": "escalating"
+        },
+        "language": "en",
+        "key_facts": [
+          "Customer has been waiting 180 minutes; all 4 customer messages are unanswered.",
+          "Billing records show TX-9001 and TX-9002 captured at $29.99 each ($59.98 total), and TX-9003 pending at $29.99.",
+          "TX-9002 and TX-9003 are flagged as possible duplicates; no refund appears in billing records.",
+          "Account remains on the Free plan; provisioning error at 2026-11-12 03:58:40 UTC indicates Pro activation was not applied.",
+          "Customer needs Pro export features for a presentation in 2 hours and threatens to dispute the charges with their bank by end of day.",
+          "US East web app is operational; global payment webhooks are degraded since 03:50 UTC, while the public status page reports operational."
+        ],
+        "customer_deadline": "Presentation in 2 hours; says they will dispute the charges by end of day.",
+        "business_risks": [
+          "chargeback_or_legal_threat"
+        ]
+      },
+      "kb_article_ids": [
+        "KB-001",
+        "KB-002",
+        "KB-010"
+      ],
+      "action": "escalate_to_human",
+      "route_to": [
+        "billing",
+        "engineering"
+      ],
+      "draft_reply": "Hi Jordan, I’m sorry you’ve had to wait and that this has disrupted your preparation. I checked the billing records: two $29.99 payments are captured, and a third $29.99 transaction is pending; the records flag the latter two as a possible duplicate. Your account is still on the Free plan because the Pro activation did not complete. I’m escalating the captured charges and plan activation for review by our billing team, with engineering notified about the activation issue. Please don’t retry the payment. Pending authorization holds are generally released by your bank within 3–7 business days and can’t be cancelled by our team. I can’t confirm a refund or activation outcome yet, but the appropriate teams are reviewing this.",
+      "internal_note": "Customer has waited 180 minutes with no support reply; acknowledge the delay and respond promptly.\nBilling confirms $59.98 captured across TX-9001/TX-9002 and TX-9003 pending for $29.99; TX-9002/TX-9003 are flagged as possible duplicates.\nPro activation failed after a payment-webhook timeout; global webhook monitoring is degraded, despite the public status page reporting operational.\nEscalate to billing for captured-charge review and plan activation, and engineering for the activation failure; customer has a presentation in 2 hours and threatened a bank dispute.",
+      "confidence": 0.98
+    },
+    "llm_result": {
+      "urgency": "high",
+      "urgency_reasoning": "The customer is blocked from paid Pro export functionality with a presentation deadline in two hours, and billing records confirm $59.98 in captured charges plus a possible duplicate and a pending $29.99 transaction. The customer also threatens a bank dispute, so a human needs to act now.",
+      "extracted": {
+        "product_area": "billing",
+        "issue_types": [
+          "billing",
+          "bug"
+        ],
+        "sentiment": {
+          "label": "angry",
+          "trend": "escalating"
+        },
+        "language": "en",
+        "key_facts": [
+          "Customer has been waiting 180 minutes; all 4 customer messages are unanswered.",
+          "Billing records show TX-9001 and TX-9002 captured at $29.99 each ($59.98 total), and TX-9003 pending at $29.99.",
+          "TX-9002 and TX-9003 are flagged as possible duplicates; no refund appears in billing records.",
+          "Account remains on the Free plan; provisioning error at 2026-11-12 03:58:40 UTC indicates Pro activation was not applied.",
+          "Customer needs Pro export features for a presentation in 2 hours and threatens to dispute the charges with their bank by end of day.",
+          "US East web app is operational; global payment webhooks are degraded since 03:50 UTC, while the public status page reports operational."
+        ],
+        "customer_deadline": "Presentation in 2 hours; says they will dispute the charges by end of day.",
+        "business_risks": [
+          "chargeback_or_legal_threat"
+        ]
+      },
+      "kb_article_ids": [
+        "KB-001",
+        "KB-002",
+        "KB-010"
+      ],
+      "action": "escalate_to_human",
+      "route_to": [
+        "billing",
+        "engineering"
+      ],
+      "draft_reply": "Hi Jordan, I’m sorry you’ve had to wait and that this has disrupted your preparation. I checked the billing records: two $29.99 payments are captured, and a third $29.99 transaction is pending; the records flag the latter two as a possible duplicate. Your account is still on the Free plan because the Pro activation did not complete. I’m escalating the captured charges and plan activation for review by our billing team, with engineering notified about the activation issue. Please don’t retry the payment. Pending authorization holds are generally released by your bank within 3–7 business days and can’t be cancelled by our team. I can’t confirm a refund or activation outcome yet, but the appropriate teams are reviewing this.",
+      "internal_note": "Customer has waited 180 minutes with no support reply; acknowledge the delay and respond promptly.\nBilling confirms $59.98 captured across TX-9001/TX-9002 and TX-9003 pending for $29.99; TX-9002/TX-9003 are flagged as possible duplicates.\nPro activation failed after a payment-webhook timeout; global webhook monitoring is degraded, despite the public status page reporting operational.\nEscalate to billing for captured-charge review and plan activation, and engineering for the activation failure; customer has a presentation in 2 hours and threatened a bank dispute.",
+      "confidence": 0.98
+    },
+    "policy_overrides": [],
+    "tool_calls": [
+      "get_customer_profile(customer_id='C-001')",
+      "search_knowledge_base(query='failed Pro upgrade multiple pending charges account still Free plan')",
+      "get_billing_transactions(customer_id='C-001')",
+      "check_service_status(region='us-east')"
+    ],
+    "error": null
+  },
+  {
+    "ticket_id": "T-1002",
+    "action": "escalate_to_human",
+    "result": {
+      "urgency": "critical",
+      "urgency_reasoning": "Internal monitoring confirms a regional web-app outage affecting multiple users, blocking access across the enterprise customer’s organization. The customer also reports a major customer demo this afternoon and a potential deal at risk.",
+      "extracted": {
+        "product_area": "web_app",
+        "issue_types": [
+          "service_outage"
+        ],
+        "sentiment": {
+          "label": "frustrated",
+          "trend": "escalating"
+        },
+        "language": "th",
+        "key_facts": [
+          "Customer is Siam Horizon Co., Ltd., on the Enterprise plan with 45 seats in asia-southeast.",
+          "Customer reports HTTP 500 errors across Chrome, Safari, and Firefox, affecting coworkers as well.",
+          "Internal monitoring reports the asia-southeast web app is in outage with a 38% 5xx error rate since 2026-11-12 04:55 UTC.",
+          "The public status page showed operational, but internal monitoring confirms a status-page mismatch.",
+          "Customer reports a major customer demo this afternoon and says the deal may be lost if service remains unavailable.",
+          "Four customer messages have gone unanswered for 120 minutes."
+        ],
+        "customer_deadline": "Major customer demo this afternoon (exact time not specified).",
+        "business_risks": [
+          "customer_revenue_at_risk"
+        ]
+      },
+      "kb_article_ids": [
+        "KB-004",
+        "KB-005"
+      ],
+      "action": "escalate_to_human",
+      "route_to": [
+        "sre_oncall",
+        "account_manager"
+      ],
+      "draft_reply": "ขออภัยที่คุณและเพื่อนร่วมงานไม่สามารถเข้าใช้งานได้ และต้องรอการตอบกลับครับ เราตรวจพบปัญหาการให้บริการในภูมิภาคเอเชียตะวันออกเฉียงใต้ ซึ่งสอดคล้องกับข้อผิดพลาดที่แจ้งมา แม้หน้าแสดงสถานะจะระบุว่าระบบทำงานปกติ แต่ข้อมูลดังกล่าวอาจยังไม่แสดงปัญหาเฉพาะภูมิภาคในทันที ผมได้ส่งเรื่องให้ทีมที่เกี่ยวข้องตรวจสอบโดยเร่งด่วน และแจ้งผู้ดูแลบัญชีของคุณเกี่ยวกับผลกระทบต่อการสาธิตในบ่ายนี้แล้ว เราจะอัปเดตให้ทราบเมื่อมีข้อมูลเพิ่มเติมครับ",
+      "internal_note": "Confirmed asia-southeast web-app outage: 38% 5xx since 2026-11-12 04:55 UTC; no open incident ID is listed.\nPublic status page says operational, but internal monitoring confirms a regional outage and status-page mismatch.\nEnterprise customer reports 45 seats affected and a major customer demo this afternoon; potential deal loss is customer-reported.\nFour messages have gone unanswered for 120 minutes; acknowledge the wait and promptly engage SRE on-call and the account manager.",
+      "confidence": 0.98
+    },
+    "llm_result": {
+      "urgency": "critical",
+      "urgency_reasoning": "Internal monitoring confirms a regional web-app outage affecting multiple users, blocking access across the enterprise customer’s organization. The customer also reports a major customer demo this afternoon and a potential deal at risk.",
+      "extracted": {
+        "product_area": "web_app",
+        "issue_types": [
+          "service_outage"
+        ],
+        "sentiment": {
+          "label": "frustrated",
+          "trend": "escalating"
+        },
+        "language": "th",
+        "key_facts": [
+          "Customer is Siam Horizon Co., Ltd., on the Enterprise plan with 45 seats in asia-southeast.",
+          "Customer reports HTTP 500 errors across Chrome, Safari, and Firefox, affecting coworkers as well.",
+          "Internal monitoring reports the asia-southeast web app is in outage with a 38% 5xx error rate since 2026-11-12 04:55 UTC.",
+          "The public status page showed operational, but internal monitoring confirms a status-page mismatch.",
+          "Customer reports a major customer demo this afternoon and says the deal may be lost if service remains unavailable.",
+          "Four customer messages have gone unanswered for 120 minutes."
+        ],
+        "customer_deadline": "Major customer demo this afternoon (exact time not specified).",
+        "business_risks": [
+          "customer_revenue_at_risk"
+        ]
+      },
+      "kb_article_ids": [
+        "KB-004",
+        "KB-005"
+      ],
+      "action": "escalate_to_human",
+      "route_to": [
+        "sre_oncall",
+        "account_manager"
+      ],
+      "draft_reply": "ขออภัยที่คุณและเพื่อนร่วมงานไม่สามารถเข้าใช้งานได้ และต้องรอการตอบกลับครับ เราตรวจพบปัญหาการให้บริการในภูมิภาคเอเชียตะวันออกเฉียงใต้ ซึ่งสอดคล้องกับข้อผิดพลาดที่แจ้งมา แม้หน้าแสดงสถานะจะระบุว่าระบบทำงานปกติ แต่ข้อมูลดังกล่าวอาจยังไม่แสดงปัญหาเฉพาะภูมิภาคในทันที ผมได้ส่งเรื่องให้ทีมที่เกี่ยวข้องตรวจสอบโดยเร่งด่วน และแจ้งผู้ดูแลบัญชีของคุณเกี่ยวกับผลกระทบต่อการสาธิตในบ่ายนี้แล้ว เราจะอัปเดตให้ทราบเมื่อมีข้อมูลเพิ่มเติมครับ",
+      "internal_note": "Confirmed asia-southeast web-app outage: 38% 5xx since 2026-11-12 04:55 UTC; no open incident ID is listed.\nPublic status page says operational, but internal monitoring confirms a regional outage and status-page mismatch.\nEnterprise customer reports 45 seats affected and a major customer demo this afternoon; potential deal loss is customer-reported.\nFour messages have gone unanswered for 120 minutes; acknowledge the wait and promptly engage SRE on-call and the account manager.",
+      "confidence": 0.98
+    },
+    "policy_overrides": [],
+    "tool_calls": [
+      "get_customer_profile(customer_id='C-002')",
+      "search_knowledge_base(query='HTTP 500 errors unable to access service Asia region')",
+      "check_service_status(region='asia-southeast')"
+    ],
+    "error": null
+  },
+  {
+    "ticket_id": "T-1003",
+    "action": "auto_respond",
+    "result": {
+      "urgency": "low",
+      "urgency_reasoning": "The theme behavior is a documented issue with a workaround, and the KB answers the availability and scheduling questions. There is no stated deadline or higher-impact business risk; the long wait calls for a prompt reply but does not raise the business-impact urgency.",
+      "extracted": {
+        "product_area": "appearance settings",
+        "issue_types": [
+          "bug",
+          "feature_request"
+        ],
+        "sentiment": {
+          "label": "positive",
+          "trend": "stable"
+        },
+        "language": "en",
+        "key_facts": [
+          "Customer is on the Pro plan.",
+          "Customer uses macOS desktop app v4.1.",
+          "Customer sees only Light and System Default theme options.",
+          "Customer reports System Default remains light while macOS is set to dark.",
+          "Customer asked about scheduling theme changes, such as at 6 p.m.",
+          "Customer has waited 1,440 minutes for a reply."
+        ],
+        "customer_deadline": null,
+        "business_risks": []
+      },
+      "kb_article_ids": [
+        "KB-007",
+        "KB-008"
+      ],
+      "action": "auto_respond",
+      "route_to": [
+        "engineering",
+        "product"
+      ],
+      "draft_reply": "Sorry for the delay, and thanks for your patience. There isn’t a dedicated Dark option yet; the available themes are Light and System Default, and the theme setting is available on all plans. The macOS desktop app v4.1 has a known issue where System Default does not switch to dark mode. As a workaround, please use the web app in your browser; a fix is planned for desktop app v4.2. Scheduling a theme change in the app isn’t supported yet, but System Default can follow your operating system’s automatic appearance setting. The web app is not affected by the v4.1 desktop issue. I’ll also pass along your feedback about a dedicated Dark option and scheduled switching.",
+      "internal_note": "Customer asks about a dedicated Dark theme, System Default staying light, and scheduled switching.\nProfile confirms Pro plan and macOS desktop app v4.1; KB-008 documents this exact behavior and the web-app workaround.\nKB-007 says dedicated Dark is on the roadmap and in-app scheduling is not supported; OS appearance scheduling can apply through System Default.\nCustomer has waited 1,440 minutes; acknowledge the delay. Auto-respond with the guidance and route the known issue to engineering and feature feedback to product.",
+      "confidence": 0.98
+    },
+    "llm_result": {
+      "urgency": "low",
+      "urgency_reasoning": "The theme behavior is a documented issue with a workaround, and the KB answers the availability and scheduling questions. There is no stated deadline or higher-impact business risk; the long wait calls for a prompt reply but does not raise the business-impact urgency.",
+      "extracted": {
+        "product_area": "appearance settings",
+        "issue_types": [
+          "bug",
+          "feature_request"
+        ],
+        "sentiment": {
+          "label": "positive",
+          "trend": "stable"
+        },
+        "language": "en",
+        "key_facts": [
+          "Customer is on the Pro plan.",
+          "Customer uses macOS desktop app v4.1.",
+          "Customer sees only Light and System Default theme options.",
+          "Customer reports System Default remains light while macOS is set to dark.",
+          "Customer asked about scheduling theme changes, such as at 6 p.m.",
+          "Customer has waited 1,440 minutes for a reply."
+        ],
+        "customer_deadline": null,
+        "business_risks": []
+      },
+      "kb_article_ids": [
+        "KB-007",
+        "KB-008"
+      ],
+      "action": "auto_respond",
+      "route_to": [
+        "engineering",
+        "product"
+      ],
+      "draft_reply": "Sorry for the delay, and thanks for your patience. There isn’t a dedicated Dark option yet; the available themes are Light and System Default, and the theme setting is available on all plans. The macOS desktop app v4.1 has a known issue where System Default does not switch to dark mode. As a workaround, please use the web app in your browser; a fix is planned for desktop app v4.2. Scheduling a theme change in the app isn’t supported yet, but System Default can follow your operating system’s automatic appearance setting. The web app is not affected by the v4.1 desktop issue. I’ll also pass along your feedback about a dedicated Dark option and scheduled switching.",
+      "internal_note": "Customer asks about a dedicated Dark theme, System Default staying light, and scheduled switching.\nProfile confirms Pro plan and macOS desktop app v4.1; KB-008 documents this exact behavior and the web-app workaround.\nKB-007 says dedicated Dark is on the roadmap and in-app scheduling is not supported; OS appearance scheduling can apply through System Default.\nCustomer has waited 1,440 minutes; acknowledge the delay. Auto-respond with the guidance and route the known issue to engineering and feature feedback to product.",
+      "confidence": 0.98
+    },
+    "policy_overrides": [],
+    "tool_calls": [
+      "get_customer_profile(customer_id='C-003')",
+      "search_knowledge_base(query='dark mode theme settings Pro plan appearance options')",
+      "search_knowledge_base(query='macOS desktop app v4.1 System Default theme dark mode not switching')",
+      "search_knowledge_base(query='scheduled theme automatic dark mode switch at specific time')"
+    ],
+    "error": null
+  }
+]

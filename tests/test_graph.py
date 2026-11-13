@@ -61,6 +61,7 @@ def test_full_flow_investigates_decides_and_applies_policy(run, tools, make_resu
     assert "<ticket" in decide_input
     assert "possible_duplicate_transaction_ids" in decide_input
     assert "Evidence summary" in decide_input
+    assert "reply_language: en" in decide_input
 
     assert state["triage"] == llm_decision
     assert state["final"].action is NextAction.ROUTE_TO_SPECIALIST
@@ -74,6 +75,19 @@ def test_goes_straight_to_decide_when_llm_calls_no_tool(run, tools):
     assert len(state["messages"]) == 3
     assert len(prompts) == 1
     assert "final" in state
+
+
+def test_graph_holds_wrong_language_auto_reply_for_review(run, tools, make_result):
+    decision = make_result(draft_reply="สวัสดีครับ ลองใช้เว็บแทนครับ")
+
+    state, prompts = run(iter(["Evidence summary"]), list(tools.values()), decision)
+
+    assert "reply_language: en" in prompts[0][1].content
+    assert state["triage"] == decision
+    assert state["triage"].action is NextAction.AUTO_RESPOND
+    assert state["final"].action is NextAction.ROUTE_TO_SPECIALIST
+    assert state["final"].route_to == [Team.GENERAL_SUPPORT]
+    assert state["policy_overrides"] == ["wrong_reply_language_needs_review"]
 
 
 def test_crashing_tool_becomes_safe_error_message(run):

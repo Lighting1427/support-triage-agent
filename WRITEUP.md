@@ -20,7 +20,7 @@
   the retrieval tests rank the right article first. Upgrade to hybrid search
   (BM25 + embeddings, Reciprocal Rank Fusion) when the KB grows or recall drops.
 - **Fail-safe by default.** Any failure (API error, loop limit, invalid output) returns
-  `escalate_to_human` with the error. Models are injected, so 90 tests run with fakes.
+  `escalate_to_human` with the error. Models are injected, so all tests run with fakes.
 
 ## What could go wrong
 
@@ -30,7 +30,7 @@
 | Hallucinated facts, KB articles or promises | Facts come from tools; unknown KB IDs dropped; prompt forbids unsupported promises | LLM-as-judge on every draft reply |
 | Prompt injection inside a ticket | Ticket text wrapped in `<ticket>` and treated as data; tools are read-only | Injection cases in the golden set |
 | Tool errors, API outages, endless loops | Errors returned to the model as guidance; `recursion_limit`; fail-safe escalation | Retries with backoff; alerting |
-| Wrong language / lost nuance | Original Thai sent to the model; replies checked for Thai script | Multilingual embeddings for KB search |
+| Wrong language / lost nuance | Reply language detected in code from the customer's text; a wrong-language reply is never auto-sent | Language-detection library; multilingual KB search |
 | Stale data (status page says "operational") | Prompt and tool favour internal monitoring and flag mismatches | Open the incident automatically |
 | Sensitive data sent to the LLM | Tool crashes never expose internals to the model | Redact card numbers and emails first |
 

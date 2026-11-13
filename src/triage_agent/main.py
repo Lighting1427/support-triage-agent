@@ -1,9 +1,15 @@
+"""วิธีเรียกใช้งาน:
+
+python -m triage_agent --json --output agent_output.json   -> เขียนไฟล์ UTF-8 เอง (ไม่ผ่าน shell)
+"""
+
 import argparse
 import json
 import logging
 import os
 import sys
 import textwrap
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -17,6 +23,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Triage the sample support tickets.")
     parser.add_argument("--ticket", action="append", help="Ticket ID to run (repeatable).")
     parser.add_argument("--json", action="store_true", help="Print results as JSON.")
+    parser.add_argument("--output", type=Path, help="Write results to this file (UTF-8).")
     parser.add_argument("-v", "--verbose", action="store_true", help="Log tool calls.")
     return parser.parse_args(argv)
 
@@ -51,6 +58,13 @@ def format_outcome(outcome: TicketOutcome) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_outcomes(outcomes: list[TicketOutcome], *, as_json: bool) -> str:
+    if as_json:
+        payload = [o.model_dump(mode="json") for o in outcomes]
+        return json.dumps(payload, indent=2, ensure_ascii=False)
+    return "\n".join(format_outcome(o) for o in outcomes)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     load_dotenv()
@@ -73,9 +87,12 @@ def main(argv: list[str] | None = None) -> int:
         if not wanted or ticket.ticket_id in wanted
     ]
 
-    if args.json:
-        payload = [o.model_dump(mode="json") for o in outcomes]
-        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    text = render_outcomes(outcomes, as_json=args.json)
+    if args.output:
+        # เขียนไฟล์เองเป็น UTF-8: ถ้าใช้ > หรือ Out-File ใน PowerShell
+        # shell จะแปลง encoding ระหว่างทาง ภาษาไทยและเครื่องหมาย ' จะเพี้ยน
+        args.output.write_text(text, encoding="utf-8")
+        print(f"Saved {len(outcomes)} results to {args.output}")
     else:
-        print("\n".join(format_outcome(o) for o in outcomes))
+        print(text)
     return 0

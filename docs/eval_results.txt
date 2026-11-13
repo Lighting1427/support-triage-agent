@@ -1,0 +1,105 @@
+
+T-1001 (run 1/3)
+  PASS  urgency         got high
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-001', 'KB-002', 'KB-003', 'KB-010']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1002 (run 1/3)
+  PASS  urgency         got critical
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-004', 'KB-005']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: True
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1003 (run 1/3)
+  PASS  urgency         got low
+  PASS  action          got auto_respond
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-008', 'KB-007', 'KB-009']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1001 (run 2/3)
+  PASS  urgency         got high
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-001', 'KB-002', 'KB-003']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1002 (run 2/3)
+  PASS  urgency         got critical
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-004']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: True
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1003 (run 2/3)
+  PASS  urgency         got low
+  PASS  action          got auto_respond
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-007', 'KB-008', 'KB-009']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1001 (run 3/3)
+  PASS  urgency         got high
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-001', 'KB-002', 'KB-003', 'KB-010']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1002 (run 3/3)
+  PASS  urgency         got critical
+  PASS  action          got escalate_to_human
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-004']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: True
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+T-1003 (run 3/3)
+  PASS  urgency         got low
+  PASS  action          got auto_respond
+  PASS  teams           ok
+  PASS  issue_types     ok
+  PASS  kb_articles     cited ['KB-007', 'KB-008', 'KB-009']
+  PASS  tools_used      ok
+  PASS  reply_language  thai characters: False
+  PASS  internal_note_en thai characters: False
+  policy overrides: -
+
+==================================================
+Checks passed          : 72/72 (100%)
+Action correct (LLM)   : 9/9   <- before policy guardrails
+Action correct (final) : 9/9   <- after policy guardrails
+Policy overrides       : 0 in 9 tickets

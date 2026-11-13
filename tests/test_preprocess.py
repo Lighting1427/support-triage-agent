@@ -1,6 +1,7 @@
 import pytest
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from triage_agent.models import Author, Message
 from triage_agent.nodes import compute_facts, preprocess
 from triage_agent.prompts import _ago, render_ticket
 
@@ -16,6 +17,7 @@ from triage_agent.prompts import _ago, render_ticket
                 "unanswered_customer_messages": 4,
                 "minutes_waiting_for_reply": 180,
                 "has_support_replied": False,
+                "reply_language": "en",
             },
         ),
         # T2: 4 ข้อความใน 2 ชม. ยังไม่มีใครตอบ
@@ -26,6 +28,7 @@ from triage_agent.prompts import _ago, render_ticket
                 "unanswered_customer_messages": 4,
                 "minutes_waiting_for_reply": 120,
                 "has_support_replied": False,
+                "reply_language": "th",
             },
         ),
         # T3: support เคยตอบแล้ว จึงนับเฉพาะ 3 ข้อความหลังจากนั้น (รอมา 1 วัน)
@@ -36,6 +39,7 @@ from triage_agent.prompts import _ago, render_ticket
                 "unanswered_customer_messages": 3,
                 "minutes_waiting_for_reply": 1440,
                 "has_support_replied": True,
+                "reply_language": "en",
             },
         ),
     ],
@@ -43,6 +47,29 @@ from triage_agent.prompts import _ago, render_ticket
 def test_compute_facts(tickets, now, ticket_id, expected):
     facts = compute_facts(tickets[ticket_id], now)
     assert facts.model_dump(include=set(expected)) == expected
+
+
+@pytest.mark.parametrize(
+    ("customer_text", "support_text", "language"),
+    [
+        ("Please help with dark mode.", "สวัสดีครับ", "en"),
+        ("ช่วยตรวจสอบให้หน่อยครับ", "We are checking.", "th"),
+        ("เปิด app แล้วขึ้น error 500 ครับ", "We are checking.", "th"),
+    ],
+)
+def test_reply_language_uses_customer_text_only(
+    tickets, now, customer_text, support_text, language
+):
+    ticket = tickets["T-1003"].model_copy(
+        update={
+            "messages": [
+                Message(author=Author.CUSTOMER, sent_at=now, text=customer_text),
+                Message(author=Author.SUPPORT, sent_at=now, text=support_text),
+            ]
+        }
+    )
+
+    assert compute_facts(ticket, now).reply_language == language
 
 
 @pytest.mark.parametrize(
@@ -62,6 +89,7 @@ def test_render_ticket_wraps_customer_text_and_keeps_thai(tickets, now):
     assert "ระบบเข้าไม่ได้ครับ" in text
     assert "[2026-11-12 05:00 UTC | 2h 0m ago]" in text
     assert "minutes_waiting_for_reply: 120" in text
+    assert "reply_language: th" in text
 
 
 def test_preprocess_node_returns_facts_and_first_two_messages(tickets, now):

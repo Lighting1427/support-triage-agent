@@ -1,12 +1,10 @@
-import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
 from pydantic import BaseModel
 
+from triage_agent.language import contains_thai, reply_matches_language
 from triage_agent.models import IssueType, NextAction, Team, TicketOutcome, Urgency
-
-_THAI_CHARACTERS = re.compile(r"[\u0E00-\u0E7F]")
 
 
 class GoldenCase(BaseModel):
@@ -69,9 +67,15 @@ def check_tools_used(case: GoldenCase, outcome: TicketOutcome) -> CheckResult:
 
 
 def check_reply_language(case: GoldenCase, outcome: TicketOutcome) -> CheckResult:
-    has_thai = bool(_THAI_CHARACTERS.search(outcome.result.draft_reply))
-    passed = has_thai if case.reply_language == "th" else not has_thai
+    has_thai = contains_thai(outcome.result.draft_reply)
+    passed = reply_matches_language(outcome.result.draft_reply, case.reply_language)
     return CheckResult("reply_language", passed, f"thai characters: {has_thai}")
+
+
+def check_internal_note_language(case: GoldenCase, outcome: TicketOutcome) -> CheckResult:
+    # ทีมภายใน (SRE, billing) อ่าน internal_note จึงต้องเป็นภาษาอังกฤษเสมอ ไม่ว่าลูกค้าเขียนภาษาอะไร
+    has_thai = contains_thai(outcome.result.internal_note)
+    return CheckResult("internal_note_en", not has_thai, f"thai characters: {has_thai}")
 
 
 DEFAULT_CHECKS: tuple[Check, ...] = (
@@ -82,6 +86,7 @@ DEFAULT_CHECKS: tuple[Check, ...] = (
     check_kb_articles,
     check_tools_used,
     check_reply_language,
+    check_internal_note_language,
 )
 
 

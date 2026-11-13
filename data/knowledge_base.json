@@ -46,7 +46,7 @@
     "title": "Appearance settings: Light and System Default themes",
     "category": "product",
     "tags": ["appearance", "theme", "dark mode", "light", "system default", "settings"],
-    "content": "Settings > Appearance offers two themes: Light and System Default. System Default follows your operating system's light or dark setting. A dedicated Dark option is on the roadmap. The theme setting is available on all plans."
+    "content": "Settings > Appearance offers two themes: Light and System Default. System Default follows your operating system's light or dark setting. A dedicated Dark option is on the roadmap. Switching the theme on a schedule (for example at a set time) is not supported yet; because System Default follows the OS, any automatic appearance switching set in the OS also applies. The theme setting is available on all plans."
   },
   {
     "article_id": "KB-008",

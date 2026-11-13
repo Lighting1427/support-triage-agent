@@ -66,6 +66,16 @@ def test_thai_ticket_requires_thai_reply(cases, ideal_t3_outcome):
     assert results["reply_language"].passed is False
 
 
+@pytest.mark.parametrize("ticket_id", ["T-1002", "T-1003"])
+def test_empty_reply_fails_language_check(cases, ideal_t3_outcome, ticket_id):
+    result = ideal_t3_outcome.result.model_copy(update={"draft_reply": "   "})
+    outcome = ideal_t3_outcome.model_copy(update={"result": result})
+
+    results = {r.name: r for r in evaluate(cases[ticket_id], outcome)}
+
+    assert results["reply_language"].passed is False
+
+
 def test_failed_agent_fails_every_check(cases):
     outcome = TicketOutcome(ticket_id="T-1001", action=NextAction.ESCALATE_TO_HUMAN, error="boom")
 
@@ -81,3 +91,12 @@ def test_llm_action_is_judged_before_policy(cases, ideal_t3_outcome):
     assert not llm_action_was_correct(
         cases["T-1003"], ideal_t3_outcome.model_copy(update={"llm_result": llm_wrong})
     )
+
+
+def test_internal_note_must_be_english_even_for_thai_tickets(cases, ideal_t3_outcome):
+    thai_note = ideal_t3_outcome.result.model_copy(update={"internal_note": "ลูกค้าแจ้งปัญหา"})
+    outcome = ideal_t3_outcome.model_copy(update={"result": thai_note})
+
+    failed = {r.name for r in evaluate(cases["T-1003"], outcome) if not r.passed}
+
+    assert failed == {"internal_note_en"}

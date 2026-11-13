@@ -14,6 +14,6 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         return cls(
-            openai_model=os.getenv("OPENAI_MODEL", "gpt-5.5"),
+            openai_model=os.getenv("OPENAI_MODEL", "gpt-6-luna"),
             data_dir=Path(os.getenv("TRIAGE_DATA_DIR", PROJECT_ROOT / "data")),
         )

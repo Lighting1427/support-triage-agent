@@ -1,0 +1,80 @@
+==================== T-1001 ====================
+Urgency     : HIGH - The customer is blocked from paid Pro export functionality with a presentation in two hours. Billing records verify $59.98 captured across two $29.99 transactions and an additional $29.99 pending transaction; the customer also threatens a bank dispute.
+Action      : escalate_to_human -> billing, engineering, sre_oncall
+Issues      : billing, bug (area: billing and Pro plan activation)
+Sentiment   : angry (escalating), language: en
+Risks       : chargeback_or_legal_threat
+Deadline    : Presentation in two hours; threatens to dispute charges by end of day.
+KB articles : KB-001, KB-002, KB-003
+Confidence  : 0.98
+Tools used  : get_customer_profile(customer_id='C-001') -> search_knowledge_base(query='failed Pro upgrade pending duplicate charges account still Free plan') -> get_billing_transactions(customer_id='C-001') -> check_service_status(region='us-east')
+Policy      : no overrides
+Key facts   :
+  - Account remains on the Free plan.
+  - TX-9001 and TX-9002 are captured at $29.99 USD each; captured total is $59.98.
+  - TX-9003 is pending for $29.99; billing identifies TX-9002 and TX-9003 as possible duplicates.
+  - Billing records show no refund.
+  - Pro activation failed after a payment-webhook timeout at 2026-11-12 03:58:40 UTC.
+  - Payment webhooks are degraded with a 0.12 5xx error rate since 2026-11-12 03:50 UTC; the web app is operational.
+  - Customer reports three charges, but billing records show two captured transactions and one pending transaction.
+  - Customer has a presentation in two hours and threatens to dispute the charges by end of day.
+  - Four customer messages have gone unanswered over 180 minutes.
+Internal note:
+  Customer has waited 180 minutes across four messages; acknowledge the delay and urgent presentation deadline.
+  Billing verifies two captured $29.99 payments ($59.98 total), one pending $29.99 transaction, and no refund; customer reports three charges, which billing records do not confirm as three captured.
+  Pro activation failed after a payment-webhook timeout; webhooks are degraded, while the public status page says operational, conflicting with internal monitoring.
+  Escalate now: billing to review duplicate captured payment and activation, engineering/SRE to investigate webhook degradation; advise customer not to retry.
+Draft reply :
+  Hello Jordan, I’m sorry we left your messages unanswered, especially with your presentation coming up. I checked the account: it is still on the Free plan, and our billing records show two captured payments of $29.99 each and one $29.99 payment pending—not three captured payments. Please don’t retry the payment. I’ve escalated the plan activation and payment review to the appropriate teams. Our policy is for billing to review and refund duplicate captured charges; refunds, when issued, typically take 5–10 business days to appear. A pending authorization is generally released by the bank within 3–7 business days, and our team cannot cancel it. Opening a bank dispute while a refund is in progress can delay it. We’ll review the account and payment records and follow up.
+
+==================== T-1002 ====================
+Urgency     : CRITICAL - The web app is confirmed to be in an outage in the customer’s region, preventing multiple users at this enterprise organization from accessing the service. The customer also has a major-customer demo this afternoon and reports a deal may be at risk.
+Action      : escalate_to_human -> sre_oncall, account_manager
+Issues      : service_outage (area: web_app)
+Sentiment   : frustrated (escalating), language: th
+Risks       : customer_revenue_at_risk
+Deadline    : Demo with a major customer this afternoon; exact time not specified.
+KB articles : KB-004
+Confidence  : 0.99
+Tools used  : get_customer_profile(customer_id='C-002') -> search_knowledge_base(query='HTTP 500 cannot access application troubleshooting') -> check_service_status(region='asia-southeast')
+Policy      : no overrides
+Key facts   :
+  - Customer is on the enterprise plan with 45 seats in region asia-southeast.
+  - Customer reports HTTP 500 errors across multiple browsers and devices, affecting coworkers as well.
+  - Internal monitoring reports an asia-southeast web-app outage with a 38% 5xx error rate since 2026-11-12 04:55 UTC.
+  - The public status page reports operational, while internal monitoring flags an outage; a status-page mismatch is recorded.
+  - Customer has a demo with a major customer this afternoon and says the deal may be lost if service does not recover.
+  - Customer has waited 120 minutes without a support reply.
+Internal note:
+  Enterprise customer (45 seats, asia-southeast) reports HTTP 500 access failures across users and browsers; no support reply for 120 minutes.
+  Monitoring confirms an Asia Southeast web-app outage: 38% 5xx since 2026-11-12 04:55 UTC; public status page says operational, mismatch recorded.
+  Customer has a major-customer demo this afternoon and says the deal may be at risk; promptly acknowledge the wait.
+  Escalate now to sre_oncall for incident response and notify account_manager; no open incident ID is recorded.
+Draft reply :
+  ขออภัยที่คุณรอคำตอบนาน และที่ทีมงานของคุณไม่สามารถเข้าใช้งานได้ โดยได้รับข้อผิดพลาด 500 ครับ เราตรวจพบความผิดปกติของบริการในภูมิภาคเอเชียตะวันออกเฉียงใต้ ซึ่งสอดคล้องกับปัญหาที่คุณรายงาน แม้ว่าหน้าสถานะสาธารณะจะแสดงว่าระบบทำงานปกติก็ตาม เรากำลังส่งเรื่องให้ทีมที่เกี่ยวข้องตรวจสอบโดยเร่งด่วน และแจ้งผู้ดูแลบัญชีของคุณให้รับทราบเรื่องเดโมบ่ายนี้ด้วยครับ
+
+==================== T-1003 ====================
+Urgency     : LOW - The appearance issue is a documented, non-blocking desktop-app bug with a web-app workaround, and the missing dedicated Dark theme and scheduling support are covered by the KB. There is no deadline or time-sensitive business impact.
+Action      : auto_respond -> engineering, product
+Issues      : bug, feature_request (area: appearance settings)
+Sentiment   : positive (stable), language: en
+Risks       : -
+Deadline    : -
+KB articles : KB-007, KB-008, KB-009
+Confidence  : 0.98
+Tools used  : get_customer_profile(customer_id='C-003') -> search_knowledge_base(query='dark mode theme options system default macOS desktop app') -> search_knowledge_base(query='schedule theme dark mode automatic appearance switch time') -> check_service_status(region='us-west')
+Policy      : no overrides
+Key facts   :
+  - Customer is on the Pro plan and uses macOS desktop app v4.1.
+  - Settings > Appearance offers Light and System Default; a dedicated Dark option is not currently available.
+  - System Default ignores macOS dark mode in desktop app v4.1; the web app is not affected.
+  - In-app theme scheduling is not supported yet.
+Internal note:
+  Customer uses macOS desktop app v4.1 and reports System Default stays light with macOS dark mode enabled; this matches KB-008.
+  KB-008 documents the web app as a workaround and a fix planned for desktop app v4.2; KB-007 confirms no dedicated Dark option or in-app scheduling yet.
+  Customer also suggested scheduled switching; KB-009 says product reviews feature requests monthly.
+  Three customer messages have been unanswered for 24 hours; please reply promptly, clarify the earlier guidance, and route the bug to engineering and feature suggestion to product.
+Draft reply :
+  Thanks for explaining what you’re seeing, and sorry for the confusion. Settings > Appearance currently offers Light and System Default on all plans; a dedicated Dark option is on the roadmap. You’ve encountered a known issue in macOS desktop app v4.1 where System Default doesn’t follow macOS dark mode. As a workaround, you can use the web app, which isn’t affected; a fix is planned for desktop app v4.2.
+
+  Theme scheduling isn’t supported in the app yet. Normally, System Default follows your operating system’s appearance setting, including any automatic switching set there. I’ll share your scheduling suggestion with our product team, and I’ll pass the desktop-app issue to engineering.

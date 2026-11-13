@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -130,6 +131,7 @@ class TicketFacts(_Frozen):
     unanswered_customer_messages: int
     minutes_waiting_for_reply: int
     has_support_replied: bool
+    reply_language: Literal["th", "en"]  # ตรวจจากตัวอักษรที่ลูกค้าเขียนจริง ไม่ให้ LLM เดาเอง
 
 
 class Urgency(StrEnum):

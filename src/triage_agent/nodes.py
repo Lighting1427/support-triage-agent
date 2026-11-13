@@ -6,6 +6,7 @@ from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import Runnable
 
+from triage_agent.language import detect_reply_language
 from triage_agent.models import Author, Ticket, TicketFacts, TriageResult
 from triage_agent.prompts import (
     DECIDE_SYSTEM_PROMPT,
@@ -41,6 +42,7 @@ def compute_facts(ticket: Ticket, now: datetime) -> TicketFacts:
         unanswered_customer_messages=len(unanswered),
         minutes_waiting_for_reply=_minutes(now, unanswered[0].sent_at) if unanswered else 0,
         has_support_replied=last_support_reply is not None,
+        reply_language=detect_reply_language(m.text for m in customer_messages),
     )
 
 

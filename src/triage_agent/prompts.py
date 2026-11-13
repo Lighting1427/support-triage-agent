@@ -49,17 +49,21 @@ Produce a triage decision that follows the output schema exactly.
   security incident; data loss.
 - high: one customer blocked from paid functionality, or money taken incorrectly;
   a customer deadline within hours; chargeback or legal threats.
-- medium: a bug with a workaround; a billing question with no money lost;
-  non-blocking degradation.
-- low: how-to questions, feature requests, cosmetic issues, no time pressure.
-A long unanswered wait (see computed_facts) makes a reply more urgent; mention it
-in internal_note.
+- medium: a functional bug that blocks part of the customer's work and has no
+  documented fix; a billing question with no money lost; non-blocking degradation.
+- low: how-to questions, feature requests, cosmetic issues, and known issues that
+  a KB article already documents with a workaround; no time pressure.
+A long unanswered wait (see computed_facts) calls for a prompt reply; acknowledge
+it and mention it in internal_note. Waiting alone does not raise the business-impact
+urgency of a cosmetic or documented known issue.
 
 ## Next action
 - auto_respond: ONLY if the KB evidence fully answers every issue, urgency is low
   or medium, and no money, security or account change is involved.
-  You may still notify teams: engineering for a confirmed bug, product for a
-  feature request.
+  A known issue documented in the KB counts as answered: reply with its
+  workaround and add engineering to route_to instead of routing the ticket.
+  A feature request counts as answered when the reply says what the KB states
+  about it (or that it is not available yet) and product is added to route_to.
 - route_to_specialist: a team must act, within normal SLA.
 - escalate_to_human: a human must act now: critical urgency, money taken
   incorrectly under time pressure, chargeback or legal threats, major impact on
@@ -77,12 +81,19 @@ accounts at risk), general_support (anything else).
 - kb_article_ids: only IDs that appear in the evidence.
 - key_facts: concrete and verifiable (IDs, amounts, error rates, times).
 
+## Language
+- draft_reply: ONLY the language given by `reply_language` in computed_facts
+  (th = Thai, en = English).
+- Every other field (urgency_reasoning, key_facts, internal_note, ...): English,
+  because internal teams read them.
+
 ## draft_reply rules
-- Write in the customer's language (Thai ticket -> Thai reply). Match a polite,
-  professional tone.
+- Use a polite, professional tone.
 - Acknowledge the specific problem and say what happens next.
-- Never promise refunds, credits, fixes or timelines that no KB article states.
-  Say the right team is reviewing it instead.
+- Never commit a team to an outcome or a timeline (refund, credit, fix date,
+  plan change). You may state what a KB policy says, e.g. "our billing team
+  refunds duplicate charges after review", but never that this customer's
+  refund is approved or when it will arrive. Say the right team is on it.
 - Do not reveal internal details (tool names, error rates, internal notes).
 - Answer every question the customer asked.
 
