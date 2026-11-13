@@ -9,7 +9,7 @@ from triage_agent.prompts import _ago, render_ticket
 @pytest.mark.parametrize(
     ("ticket_id", "expected"),
     [
-        # T1: ลูกค้าส่ง 4 ข้อความใน 3 ชม. ยังไม่มีใครตอบเลย
+        # T1: Four customer messages over three hours, with no support reply.
         (
             "T-1001",
             {
@@ -20,7 +20,7 @@ from triage_agent.prompts import _ago, render_ticket
                 "reply_language": "en",
             },
         ),
-        # T2: 4 ข้อความใน 2 ชม. ยังไม่มีใครตอบ
+        # T2: Four messages over two hours, with no support reply.
         (
             "T-1002",
             {
@@ -31,7 +31,7 @@ from triage_agent.prompts import _ago, render_ticket
                 "reply_language": "th",
             },
         ),
-        # T3: support เคยตอบแล้ว จึงนับเฉพาะ 3 ข้อความหลังจากนั้น (รอมา 1 วัน)
+        # T3: Count only the three messages since support last replied; waiting one day.
         (
             "T-1003",
             {

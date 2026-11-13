@@ -38,7 +38,7 @@ Rule = Callable[[TriageResult, PolicyContext], TriageResult | None]
 
 def _at_least(result: TriageResult, action: NextAction) -> TriageResult:
     if _ACTION_LEVEL[result.action] >= _ACTION_LEVEL[action]:
-        return result  # ปลอดภัยพอแล้ว ไม่ลดระดับลง
+        return result  # Already at least as safe; never lower the action level.
     return result.model_copy(update={"action": action})
 
 
@@ -108,8 +108,8 @@ def auto_respond_requires_kb_evidence(
 def wrong_reply_language_needs_review(
     result: TriageResult, ctx: PolicyContext
 ) -> TriageResult | None:
-    # คำตอบที่จะส่งอัตโนมัติต้องเป็นภาษาเดียวกับที่ลูกค้าเขียนและต้องไม่ว่าง
-    # ส่วน action อื่นมีคนอ่านก่อนส่งอยู่แล้ว จึงไม่ต้องบังคับ
+    # Automatic replies must be non-empty and match the customer's language.
+    # Other actions already require human review before the reply is sent.
     if result.action is NextAction.AUTO_RESPOND and not reply_matches_language(
         result.draft_reply, ctx.facts.reply_language
     ):
@@ -140,7 +140,7 @@ DEFAULT_RULES: tuple[Rule, ...] = (
 def apply_rules(
     result: TriageResult, ctx: PolicyContext, rules: Sequence[Rule] = DEFAULT_RULES
 ) -> tuple[TriageResult, list[str]]:
-    """รันกฎตามลำดับ คืนผลสุดท้าย + ชื่อกฎที่ "เปลี่ยนค่าจริง" """
+    """Apply rules in order and return the final result and names of rules that changed it."""
     applied: list[str] = []
     for rule in rules:
         updated = rule(result, ctx)
@@ -153,7 +153,7 @@ def apply_rules(
 def make_apply_policy_node(
     store: MockDataStore, known_kb_ids: frozenset[str]
 ) -> Callable[[TriageState], dict]:
-    """สร้าง node apply_policy โดย inject แหล่งข้อมูลที่ตรวจสอบแล้วเข้ามา"""
+    """Build a policy node with injected sources of verified system data."""
 
     def apply_policy(state: TriageState) -> dict:
         ctx = PolicyContext(

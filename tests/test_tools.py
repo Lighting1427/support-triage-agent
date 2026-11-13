@@ -9,7 +9,7 @@ from triage_agent.tools import find_possible_duplicates, months_between
 
 
 def call(tools: dict, name: str, **arguments) -> dict:
-    """เรียก tool ด้วยชื่อ แล้วแปลง JSON ที่ LLM จะได้เห็น กลับเป็น dict เพื่อ assert"""
+    """Invoke a named tool and decode its JSON response into a dict for assertions."""
     return json.loads(tools[name].invoke(arguments))
 
 

@@ -73,7 +73,7 @@ def check_reply_language(case: GoldenCase, outcome: TicketOutcome) -> CheckResul
 
 
 def check_internal_note_language(case: GoldenCase, outcome: TicketOutcome) -> CheckResult:
-    # ทีมภายใน (SRE, billing) อ่าน internal_note จึงต้องเป็นภาษาอังกฤษเสมอ ไม่ว่าลูกค้าเขียนภาษาอะไร
+    # Internal teams (SRE, billing) need English notes regardless of the customer's language.
     has_thai = contains_thai(outcome.result.internal_note)
     return CheckResult("internal_note_en", not has_thai, f"thai characters: {has_thai}")
 
@@ -100,5 +100,5 @@ def evaluate(
 
 
 def llm_action_was_correct(case: GoldenCase, outcome: TicketOutcome) -> bool:
-    """action ที่ LLM ตัดสินใจเอง วัดว่า guardrail"""
+    """Check the LLM's action before policy guardrails are applied."""
     return outcome.llm_result is not None and outcome.llm_result.action is case.expected_action

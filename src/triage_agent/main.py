@@ -1,6 +1,7 @@
-"""วิธีเรียกใช้งาน:
+"""Usage:
 
-python -m triage_agent --json --output agent_output.json   -> เขียนไฟล์ UTF-8 เอง (ไม่ผ่าน shell)
+python -m triage_agent --json --output agent_output.json
+    Write UTF-8 directly, bypassing shell redirection.
 """
 
 import argparse
@@ -29,7 +30,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 
 
 def format_outcome(outcome: TicketOutcome) -> str:
-    """แปลงผลของ ticket หนึ่งใบเป็นข้อความอ่านง่ายสำหรับ console"""
+    """Format a ticket outcome as readable console output."""
     header = f"{'=' * 20} {outcome.ticket_id} {'=' * 20}"
     if outcome.result is None:
         return f"{header}\nAction      : {outcome.action} (agent failed: {outcome.error})\n"
@@ -89,8 +90,8 @@ def main(argv: list[str] | None = None) -> int:
 
     text = render_outcomes(outcomes, as_json=args.json)
     if args.output:
-        # เขียนไฟล์เองเป็น UTF-8: ถ้าใช้ > หรือ Out-File ใน PowerShell
-        # shell จะแปลง encoding ระหว่างทาง ภาษาไทยและเครื่องหมาย ' จะเพี้ยน
+        # Write UTF-8 directly: PowerShell redirection or Out-File may transcode
+        # native output, corrupting Thai text and punctuation.
         args.output.write_text(text, encoding="utf-8")
         print(f"Saved {len(outcomes)} results to {args.output}")
     else:

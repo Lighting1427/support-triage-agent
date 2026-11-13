@@ -115,7 +115,7 @@ def _ago(minutes: int) -> str:
 
 
 def render_ticket(ticket: Ticket, facts: TicketFacts, now: datetime) -> str:
-    """สร้างข้อความ ticket สำหรับ LLM"""
+    """Render a ticket for the LLM."""
     lines = [
         f'<ticket id="{ticket.ticket_id}" customer_id="{ticket.customer_id}" '
         f'channel="{ticket.channel}">'
@@ -133,11 +133,11 @@ def render_ticket(ticket: Ticket, facts: TicketFacts, now: datetime) -> str:
 
 
 def render_evidence(messages: Sequence[AnyMessage]) -> str:
-    """แปลงบทสนทนาช่วง investigate เป็นข้อความหลักฐานก้อนเดียวให้ node decide อ่าน
+    """Render the investigation conversation as a single evidence block for decision-making.
 
-    ทำไมไม่ส่ง message เดิมไปตรงๆ: decide ไม่ได้ bind tools ไว้
-    การส่ง tool call / tool result ดิบไปให้ model ที่ไม่มี tools อาจทำให้ API ปฏิเสธ
-    และข้อความที่จัดรูปแบบแล้วอ่านง่ายกว่าสำหรับ LLM ด้วย
+    The decider has no bound tools. Sending raw tool-call and tool-result messages
+    to it may cause the API to reject the request. A formatted evidence block also
+    makes the collected information easier for the model to read.
     """
     lines = ["<evidence>"]
     for message in messages:

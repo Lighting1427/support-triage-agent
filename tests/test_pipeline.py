@@ -44,8 +44,8 @@ def test_successful_run_reports_both_decisions_and_tool_calls(
     outcome = triage_ticket(graph, tickets["T-1001"], now, recursion_limit=20)
 
     assert outcome.tool_calls == ["get_billing_transactions(customer_id='C-001')"]
-    assert outcome.llm_result.action is NextAction.AUTO_RESPOND  # LLM ตัดสินใจผิด
-    assert outcome.action is NextAction.ROUTE_TO_SPECIALIST  # policy แก้ให้
+    assert outcome.llm_result.action is NextAction.AUTO_RESPOND  # Incorrect LLM decision.
+    assert outcome.action is NextAction.ROUTE_TO_SPECIALIST  # Corrected by policy.
     assert outcome.policy_overrides == ["billing_never_auto_responds"]
 
     text = format_outcome(outcome)

@@ -1,4 +1,4 @@
-"""การตรวจภาษาแบบ deterministic"""
+"""Deterministic language detection."""
 
 from triage_agent.language import contains_thai, detect_reply_language
 

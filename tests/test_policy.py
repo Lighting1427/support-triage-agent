@@ -15,7 +15,7 @@ KNOWN_KB = frozenset({"KB-002", "KB-003", "KB-007", "KB-008"})
 
 @pytest.fixture
 def ctx_for(store, tickets, now):
-    """สร้าง PolicyContext ของ ticket ที่ระบุ (ใช้ข้อมูลลูกค้าจาก mock data)"""
+    """Build a ticket's PolicyContext using customer details from the mock store."""
 
     def _ctx(ticket_id: str) -> PolicyContext:
         ticket = tickets[ticket_id]

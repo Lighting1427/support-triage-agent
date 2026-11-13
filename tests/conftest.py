@@ -52,9 +52,10 @@ def tickets(dataset) -> dict:
 
 @pytest.fixture
 def make_result():
-    """โรงงานสร้าง TriageResult สำหรับ test: ค่าเริ่มต้นเป็นเคส "ง่ายและปลอดภัย" แก้เฉพาะที่สนใจ
+    """Build a TriageResult for tests, starting with a safe, routine case.
 
-    ตัวอย่าง: make_result(urgency=Urgency.CRITICAL, issue_types=[IssueType.SERVICE_OUTAGE])
+    Override only the fields relevant to each test, for example:
+    make_result(urgency=Urgency.CRITICAL, issue_types=[IssueType.SERVICE_OUTAGE])
     """
 
     def _make(*, issue_types=(IssueType.HOW_TO,), business_risks=(), **overrides) -> TriageResult:

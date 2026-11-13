@@ -27,7 +27,7 @@ def _minutes(later: datetime, earlier: datetime) -> int:
 
 
 def compute_facts(ticket: Ticket, now: datetime) -> TicketFacts:
-    """คำนวณข้อเท็จจริงเรื่องเวลาและจำนวนข้อความ"""
+    """Compute timing facts and message counts."""
     customer_messages = [m for m in ticket.messages if m.author is Author.CUSTOMER]
     support_times = [m.sent_at for m in ticket.messages if m.author is Author.SUPPORT]
     last_support_reply = max(support_times, default=None)
@@ -58,10 +58,10 @@ def preprocess(state: TriageState) -> dict:
 
 
 def make_investigate_node(investigator: ChatRunnable) -> Callable[[TriageState], dict]:
-    """สร้าง node investigate โดย inject model เข้ามา (test ส่ง fake model แทนได้)"""
+    """Build an investigation node with an injected model; tests can provide a fake."""
 
     def investigate(state: TriageState) -> dict:
-        # ส่ง messages ทั้งหมด (= context ทั้งหมด) ให้ LLM แล้วต่อท้ายด้วยคำตอบใหม่
+        # Send the full conversation context to the LLM, then append its response.
         response = investigator.invoke(state["messages"])
         for call in getattr(response, "tool_calls", []):
             logger.info("tool call: %s(%s)", call["name"], call["args"])
@@ -71,11 +71,11 @@ def make_investigate_node(investigator: ChatRunnable) -> Callable[[TriageState],
 
 
 def make_decide_node(decider: DecisionRunnable) -> Callable[[TriageState], dict]:
-    """สร้าง node decide: context ใหม่ที่สะอาด = system prompt + ticket + หลักฐาน"""
+    """Build a decision node with a fresh context: system prompt, ticket, and evidence."""
 
     def decide(state: TriageState) -> dict:
         ticket_text = render_ticket(state["ticket"], state["facts"], state["reference_time"])
-        # messages[2:] = ข้าม system prompt กับ ticket ของช่วง investigate เหลือแต่หลักฐาน
+        # Skip the investigation system prompt and ticket, leaving only evidence.
         evidence_text = render_evidence(state["messages"][2:])
         result = decider.invoke(
             [
@@ -83,13 +83,13 @@ def make_decide_node(decider: DecisionRunnable) -> Callable[[TriageState], dict]
                 HumanMessage(f"{ticket_text}\n\n{evidence_text}"),
             ]
         )
-        # validate อีกชั้น เผื่อ model ส่ง dict กลับมาแทน object
+        # Validate again in case the model returns a dict instead of a model instance.
         return {"triage": TriageResult.model_validate(result)}
 
     return decide
 
 
 def handle_tool_error(error: Exception) -> str:
-    """bug ที่ไม่คาดคิดใน tool: log รายละเอียดไว้ให้ dev แต่บอก LLM แค่ข้อความกลางๆ"""
+    """Log unexpected tool errors for developers, but give the LLM only a generic message."""
     logger.error("Tool failed unexpectedly: %r", error)
     return "Tool failed unexpectedly. Do not retry it; continue with the evidence you have."

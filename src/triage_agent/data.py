@@ -24,7 +24,7 @@ def load_tickets(path: Path) -> TicketDataset:
 
 
 class MockDataStore:
-    """ข้อมูลลูกค้า, billing และ service status ที่ tool ใช้ค้นหา"""
+    """Customer, billing, and service-status data queried by the tools."""
 
     def __init__(self, data_dir: Path) -> None:
         customers = TypeAdapter(list[Customer]).validate_python(
@@ -57,14 +57,14 @@ _TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 
 
 def tokenize(text: str) -> list[str]:
-    """แปลงเป็นตัวเล็กแล้วแยกคำ: 'Error 500!' -> ['error', '500']"""
+    """Lowercase and tokenize text: 'Error 500!' -> ['error', '500']."""
     return _TOKEN_PATTERN.findall(text.lower())
 
 
 class KnowledgeBase:
-    """ค้นบทความด้วย BM25
+    """Search articles with BM25.
 
-    เลือก BM25 แทน vector search เพราะ KB มีแค่ 10 บทความ
+    BM25 is sufficient for this knowledge base of just 10 articles.
     """
 
     def __init__(self, articles: list[KBArticle]) -> None:

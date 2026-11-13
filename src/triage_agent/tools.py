@@ -15,7 +15,7 @@ _ACTIVE_CHARGE_STATUSES = {ChargeStatus.CAPTURED, ChargeStatus.PENDING}
 
 
 def months_between(start: date, end: date) -> int:
-    """นับเดือนเต็ม: 12 มี.ค. -> 12 พ.ย. = 8 เดือน, 12 มี.ค. -> 11 พ.ย. = 7 เดือน"""
+    """Count full months: Mar 12 to Nov 12 is 8 months; Mar 12 to Nov 11 is 7."""
     months = (end.year - start.year) * 12 + (end.month - start.month)
     if end.day < start.day:
         months -= 1
@@ -23,7 +23,7 @@ def months_between(start: date, end: date) -> int:
 
 
 def find_possible_duplicates(transactions: list[Transaction]) -> list[str]:
-    """หา ID ของรายการที่ตัดเงินซ้ำกับรายการก่อนหน้า (จำนวนเท่ากัน ห่างไม่เกิน DUPLICATE_WINDOW)"""
+    """Flag later charges with the same amount within DUPLICATE_WINDOW of an earlier charge."""
     active = sorted(
         (t for t in transactions if t.status in _ACTIVE_CHARGE_STATUSES),
         key=lambda t: t.created_at,
@@ -44,7 +44,7 @@ def total_by_status(transactions: list[Transaction], status: ChargeStatus) -> De
 
 
 def disagrees_with_status_page(component: ComponentStatus) -> bool:
-    """ระบบมีปัญหาจริง แต่ status page ที่ลูกค้าเห็นยังบอกว่าปกติ"""
+    """Detect an unhealthy component whose public status page still reports operational."""
     return component.health is not Health.OPERATIONAL and (
         component.public_status_page is Health.OPERATIONAL
     )

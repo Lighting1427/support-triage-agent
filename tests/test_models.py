@@ -51,7 +51,7 @@ def test_messages_are_in_chronological_order():
 
 
 def _all_object_schemas(schema: dict) -> list[dict]:
-    """ดึง object schema ทั้งหมด ทั้งตัวหลักและ model ที่ซ้อนอยู่ใน $defs"""
+    """Collect the root schema and nested model schemas from $defs."""
     return [schema, *schema.get("$defs", {}).values()]
 
 

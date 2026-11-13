@@ -7,13 +7,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class _Frozen(BaseModel):
-    """Base ของข้อมูลที่ห้ามแก้หลังโหลดแล้ว (immutable) กัน โค้ดอื่นเผลอแก้ค่า"""
+    """Immutable base model that prevents accidental field reassignment after loading."""
 
     model_config = ConfigDict(frozen=True)
 
 
 # ----------------------------------
-# Input: ticket ลูกค้าส่งเข้ามา
+# Input: incoming support ticket
 # ----------------------------------
 
 
@@ -29,10 +29,10 @@ class Message(_Frozen):
 
 
 class Ticket(_Frozen):
-    """แชทของ ticket หนึ่งใบ มีเฉพาะสิ่งที่ลูกค้าส่งมาเท่านั้น
+    """A ticket conversation without customer-profile metadata.
 
-    จะไม่ใส่ข้อมูลลูกค้า (plan, seats, region) ไว้ที่นี่
-    agent ต้องเรียก tool เพื่อหาเอง
+    Customer details such as plan, seats, and region are omitted so the agent
+    must retrieve them through tools.
     """
 
     ticket_id: str
@@ -42,7 +42,7 @@ class Ticket(_Frozen):
 
 
 class TicketDataset(_Frozen):
-    """ticket หลายใบ + เวลา "Now" แบบตายตัว เพื่อให้ demo และ test ได้แบบเดิม"""
+    """Tickets and a fixed reference time for consistent demo and test timing."""
 
     reference_time: datetime
     tickets: list[Ticket]
@@ -69,7 +69,7 @@ class Customer(_Frozen):
     seats: int = Field(default=1, ge=1)
     customer_since: date
     preferred_language: str = "en"
-    activity_level: str  # เช่น "daily", "weekly", "inactive"
+    activity_level: str  # For example, "daily", "weekly", or "inactive".
     account_manager: str | None = None
     support_history: list[PastTicket] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
@@ -106,7 +106,7 @@ class Health(StrEnum):
 
 
 class ComponentStatus(_Frozen):
-    """ข้อมูลภายใน อาจไม่ตรงกับ status ที่ลูกค้าเห็น"""
+    """Internal monitoring data that may differ from the customer-facing status."""
 
     region: str
     component: str
@@ -131,7 +131,7 @@ class TicketFacts(_Frozen):
     unanswered_customer_messages: int
     minutes_waiting_for_reply: int
     has_support_replied: bool
-    reply_language: Literal["th", "en"]  # ตรวจจากตัวอักษรที่ลูกค้าเขียนจริง ไม่ให้ LLM เดาเอง
+    reply_language: Literal["th", "en"]  # Detected from customer text, not inferred by the LLM.
 
 
 class Urgency(StrEnum):
@@ -228,7 +228,7 @@ class TriageResult(BaseModel):
 
 
 class TicketOutcome(BaseModel):
-    """ผลลัพธ์ของ ticket หนึ่งใบ ทั้งกรณีสำเร็จและกรณี agent พัง"""
+    """A ticket outcome covering both successful runs and agent failures."""
 
     ticket_id: str
     action: NextAction

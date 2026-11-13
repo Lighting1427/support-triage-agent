@@ -28,7 +28,7 @@ def build_triage_graph(settings: Settings, reference_time: datetime) -> Compiled
 
 
 def summarize_tool_calls(messages: list[AnyMessage]) -> list[str]:
-    """ดึงรายการ tool ที่ agent เรียกตามลำดับ: ["get_customer_profile(customer_id='C-001')", ...]"""
+    """List tool calls in order, e.g. ["get_customer_profile(customer_id='C-001')", ...]."""
     return [
         f"{call['name']}({', '.join(f'{k}={v!r}' for k, v in call['args'].items())})"
         for message in messages

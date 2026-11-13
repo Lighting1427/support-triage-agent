@@ -18,9 +18,10 @@ def _ask_for_tool(name: str, **args) -> AIMessage:
 
 @pytest.fixture
 def run(store, kb, tickets, now, make_result):
-    """รัน graph กับ ticket T-1001 ด้วย fake investigator + fake decider
+    """Run the graph on T-1001 with a fake investigator and decider.
 
-    คืน (state, prompts) โดย prompts = message ที่ decider ได้รับ ใช้ตรวจว่า decide เห็นหลักฐานครบ
+    Return (state, prompts), where prompts contains the decider's input messages,
+    so tests can verify that the decision step receives all the evidence.
     """
 
     def _run(investigator_responses, tools, decision=None):
