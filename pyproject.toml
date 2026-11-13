@@ -12,6 +12,9 @@ dependencies = [
     "rank-bm25>=0.2.2",
 ]
 
+[project.scripts]
+triage = "triage_agent.main:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
@@ -25,6 +28,9 @@ packages = ["src/triage_agent"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+filterwarnings = [
+    'ignore:.*asyncio\.iscoroutinefunction.*:DeprecationWarning:langsmith\._internal\._beta_decorator',
+]
 
 [tool.ruff]
 line-length = 100

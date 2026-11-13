@@ -1,14 +1,18 @@
 from datetime import datetime
-from typing import Annotated, NotRequired, TypedDict
+from typing import Annotated, TypedDict
+
 from langchain_core.messages import AnyMessage
 from langgraph.graph.message import add_messages
 from triage_agent.models import Ticket, TicketFacts, TriageResult
 
-class TriageState(TypedDict):
+class TriageInput(TypedDict):
     ticket: Ticket
-    reference_time: datetime 
-    facts: NotRequired[TicketFacts]
-    messages: NotRequired[Annotated[list[AnyMessage], add_messages]]
-    triage: NotRequired[TriageResult] 
-    final: NotRequired[TriageResult]  
-    policy_overrides: NotRequired[list[str]]  
+    reference_time: datetime  
+
+class TriageState(TriageInput, total=False):
+    facts: TicketFacts
+    messages: Annotated[list[AnyMessage], add_messages]
+
+    triage: TriageResult 
+    final: TriageResult 
+    policy_overrides: list[str] 

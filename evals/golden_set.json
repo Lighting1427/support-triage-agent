@@ -1,0 +1,76 @@
+[
+    {
+        "ticket_id": "T-1001",
+        "allowed_urgency": [
+            "high",
+            "critical"
+        ],
+        "expected_action": "escalate_to_human",
+        "required_teams": [
+            "billing"
+        ],
+        "required_issue_types": [
+            "billing"
+        ],
+        "kb_any_of": [
+            "KB-001",
+            "KB-002",
+            "KB-003"
+        ],
+        "required_tools": [
+            "get_customer_profile",
+            "get_billing_transactions"
+        ],
+        "reply_language": "en",
+        "note": "Money taken 3x, plan not activated, chargeback threat, 2h deadline. Never promise a refund."
+    },
+    {
+        "ticket_id": "T-1002",
+        "allowed_urgency": [
+            "critical"
+        ],
+        "expected_action": "escalate_to_human",
+        "required_teams": [
+            "sre_oncall",
+            "account_manager"
+        ],
+        "required_issue_types": [
+            "service_outage"
+        ],
+        "kb_any_of": [
+            "KB-004",
+            "KB-005",
+            "KB-006"
+        ],
+        "required_tools": [
+            "get_customer_profile",
+            "check_service_status"
+        ],
+        "reply_language": "th",
+        "note": "Org-wide 500s in asia-southeast while the public status page says operational. Reply in Thai."
+    },
+    {
+        "ticket_id": "T-1003",
+        "allowed_urgency": [
+            "low"
+        ],
+        "expected_action": "auto_respond",
+        "required_teams": [
+            "engineering"
+        ],
+        "required_issue_types": [
+            "bug",
+            "feature_request"
+        ],
+        "kb_any_of": [
+            "KB-007",
+            "KB-008"
+        ],
+        "required_tools": [
+            "get_customer_profile",
+            "search_knowledge_base"
+        ],
+        "reply_language": "en",
+        "note": "Known macOS v4.1 bug (workaround: web app) plus a scheduled dark mode feature request."
+    }
+]

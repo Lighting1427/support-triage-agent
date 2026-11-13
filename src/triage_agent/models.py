@@ -1,14 +1,3 @@
-"""Data model ทั้งหมดของระบบ แบ่งเป็น 4 กลุ่ม
-
-1. Input        - สิ่งที่ลูกค้าส่งเข้ามา (Ticket, Message)
-2. Context      - ข้อมูลที่ tool ไปค้นมา (Customer, Billing, Service status, KB)
-3. Derived facts - ข้อเท็จจริงที่โค้ดคำนวณจาก ticket ก่อนส่งให้ LLM (TicketFacts)
-4. Output       - ผลการ triage ที่ LLM ต้องตอบตาม schema นี้ (TriageResult)
-
-ทุกตัวเป็น Pydantic เพื่อ validate ข้อมูลที่ "ขอบ" ของระบบทุกจุด:
-ไฟล์ JSON, ผลลัพธ์ของ tool และคำตอบของ LLM
-"""
-
 from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
@@ -47,10 +36,6 @@ class TicketDataset(_Frozen):
 
     reference_time: datetime
     tickets: list[Ticket]
-
-# ----------------------------------
-# Context: ข้อมูลที่ tool ค้นหามา
-# ----------------------------------
 
 class Plan(StrEnum):
     FREE = "free"
@@ -127,20 +112,18 @@ class TicketFacts(_Frozen):
     minutes_waiting_for_reply: int  
     has_support_replied: bool
 
-# ----------------------------------
-# Output: schema ของ structured output 
-# ----------------------------------
-
 class Urgency(StrEnum):
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
 
+
 class NextAction(StrEnum):
     AUTO_RESPOND = "auto_respond"  
     ROUTE_TO_SPECIALIST = "route_to_specialist"  
     ESCALATE_TO_HUMAN = "escalate_to_human"  
+
 
 class Team(StrEnum):
     GENERAL_SUPPORT = "general_support"
@@ -150,35 +133,53 @@ class Team(StrEnum):
     PRODUCT = "product"
     ACCOUNT_MANAGER = "account_manager"
 
+
+class IssueType(StrEnum):
+    BILLING = "billing"
+    SERVICE_OUTAGE = "service_outage" 
+    BUG = "bug"
+    FEATURE_REQUEST = "feature_request"
+    HOW_TO = "how_to"
+    OTHER = "other"
+
+
+class BusinessRisk(StrEnum):
+    CHARGEBACK_OR_LEGAL_THREAT = "chargeback_or_legal_threat"
+    CHURN_RISK = "churn_risk"
+    CUSTOMER_REVENUE_AT_RISK = "customer_revenue_at_risk" 
+
+
 class SentimentLabel(StrEnum):
     POSITIVE = "positive"
     NEUTRAL = "neutral"
     FRUSTRATED = "frustrated"
     ANGRY = "angry"
 
+
 class SentimentTrend(StrEnum):
     IMPROVING = "improving"
     STABLE = "stable"
     ESCALATING = "escalating"
 
+
 class Sentiment(BaseModel):
     label: SentimentLabel = Field(description="Customer sentiment in the latest messages.")
     trend: SentimentTrend = Field(description="How sentiment changed across the conversation.")
 
+
 class ExtractedInfo(BaseModel):
     product_area: str = Field(description="Main product area, e.g. 'billing', 'web_app'.")
-    issue_types: list[str] = Field(
-        description="All issues in the ticket, e.g. ['bug', 'feature_request']."
-    )
+    issue_types: list[IssueType] = Field(description="Every distinct issue in the ticket.")
     sentiment: Sentiment
     language: str = Field(description="ISO 639-1 code of the customer's language, e.g. 'th'.")
     key_facts: list[str] = Field(description="Concrete facts a human agent needs to know.")
     customer_deadline: str | None = Field(
         description="Any deadline the customer mentioned, or null."
     )
-    business_risks: list[str] = Field(
-        description="e.g. 'chargeback_threat', 'churn_risk', 'deal_at_risk'. Empty if none."
+    business_risks: list[BusinessRisk] = Field(
+        description="Business risks stated or clearly implied in the ticket. Empty if none."
     )
+
 
 class TriageResult(BaseModel):
     urgency: Urgency
@@ -188,7 +189,28 @@ class TriageResult(BaseModel):
         description="IDs of relevant KB articles returned by the search tool. Never invent IDs."
     )
     action: NextAction
-    route_to: list[Team] = Field(description="Teams to involve. Empty only for auto_respond.")
-    draft_reply: str = Field(description="Reply to the customer, written in their language.")
+    route_to: list[Team] = Field(
+        description=(
+            "Teams to hand off to or notify. Can be non-empty with auto_respond, "
+            "e.g. engineering for a confirmed bug or product for a feature request."
+        )
+    )
+    draft_reply: str = Field(
+        description=(
+            "Reply to the customer in their language. Sent as-is for auto_respond, "
+            "otherwise a suggested reply for the human agent."
+        )
+    )
     internal_note: str = Field(description="Short summary for the human support agent.")
     confidence: float = Field(ge=0, le=1, description="Confidence in this decision, 0 to 1.")
+
+class TicketOutcome(BaseModel):
+    """ผลลัพธ์ของ ticket หนึ่งใบ ทั้งกรณีสำเร็จและกรณี agent พัง """
+
+    ticket_id: str
+    action: NextAction  
+    result: TriageResult | None = None  
+    llm_result: TriageResult | None = None 
+    policy_overrides: list[str] = Field(default_factory=list)
+    tool_calls: list[str] = Field(default_factory=list)  
+    error: str | None = None
