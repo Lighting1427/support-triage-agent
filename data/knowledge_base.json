@@ -1,0 +1,72 @@
+[
+  {
+    "article_id": "KB-001",
+    "title": "How to upgrade from Free to Pro",
+    "category": "billing",
+    "tags": ["upgrade", "pro", "plan", "payment"],
+    "content": "Go to Settings > Billing > Upgrade and enter your card. Pro features (including presentation export) are activated within 1 minute after the payment succeeds. If your plan does not change after a successful payment, do not retry the payment; contact support so the billing team can activate the plan manually."
+  },
+  {
+    "article_id": "KB-002",
+    "title": "Pending charges and authorization holds",
+    "category": "billing",
+    "tags": ["pending", "charge", "authorization", "hold", "bank"],
+    "content": "A pending charge is an authorization hold placed by your bank. If the payment did not complete, the hold is released automatically by the bank, usually within 3-7 business days. Pending holds cannot be cancelled by our team."
+  },
+  {
+    "article_id": "KB-003",
+    "title": "Duplicate charges and refund policy",
+    "category": "billing",
+    "tags": ["duplicate", "refund", "charge", "double", "chargeback"],
+    "content": "If you were charged more than once for the same subscription, our billing team refunds every duplicate captured charge. Refunds can only be issued by the billing team and take 5-10 business days to appear on your statement. Opening a bank dispute while a refund is in progress can delay it."
+  },
+  {
+    "article_id": "KB-004",
+    "title": "Troubleshooting HTTP 500 errors",
+    "category": "technical",
+    "tags": ["error", "500", "outage", "login", "access", "browser"],
+    "content": "A 500 error means our server failed to process the request. If only you are affected, clear your cache and try another browser. If several users in your organization see it on different browsers, it is likely a service issue: contact support with your region and the time the errors started."
+  },
+  {
+    "article_id": "KB-005",
+    "title": "About our status page and incident communication",
+    "category": "technical",
+    "tags": ["status", "status page", "incident", "outage", "region"],
+    "content": "status.company.com is updated by the incident commander after an incident is confirmed, so it can lag behind real problems by up to 30 minutes, and region-specific issues may not be shown immediately. Enterprise customers receive direct updates from their account manager during incidents."
+  },
+  {
+    "article_id": "KB-006",
+    "title": "Enterprise support SLA",
+    "category": "account",
+    "tags": ["enterprise", "sla", "priority", "critical", "response time"],
+    "content": "Enterprise plans include 24/7 support. Critical (P1) issues get a first response within 30 minutes and continuous updates every hour until resolved. The account manager is notified for every P1 issue."
+  },
+  {
+    "article_id": "KB-007",
+    "title": "Appearance settings: Light and System Default themes",
+    "category": "product",
+    "tags": ["appearance", "theme", "dark mode", "light", "system default", "settings"],
+    "content": "Settings > Appearance offers two themes: Light and System Default. System Default follows your operating system's light or dark setting. A dedicated Dark option is on the roadmap. The theme setting is available on all plans."
+  },
+  {
+    "article_id": "KB-008",
+    "title": "Known issue: System Default theme ignores macOS dark mode (desktop app v4.1)",
+    "category": "known_issue",
+    "tags": ["dark mode", "macos", "mac", "system default", "theme", "bug", "desktop app"],
+    "content": "In the macOS desktop app v4.1, System Default does not switch to dark when macOS is in dark mode. The web app is not affected. Workaround: use the web app in your browser. A fix is planned for desktop app v4.2."
+  },
+  {
+    "article_id": "KB-009",
+    "title": "How to submit a feature request",
+    "category": "product",
+    "tags": ["feature request", "idea", "roadmap", "suggestion", "schedule"],
+    "content": "Feature requests can be sent through support or at feedback.company.com. The product team reviews them every month, and popular requests are added to the public roadmap."
+  },
+  {
+    "article_id": "KB-010",
+    "title": "Exporting presentations (Pro feature)",
+    "category": "product",
+    "tags": ["export", "presentation", "pro", "pdf", "pptx"],
+    "content": "Pro and Enterprise plans can export presentations to PDF and PPTX from File > Export. Free plans can only export to PNG with a watermark."
+  }
+]

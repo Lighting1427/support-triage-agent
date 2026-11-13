@@ -1,0 +1,44 @@
+[
+  {
+    "customer_id": "C-001",
+    "name": "Jordan Lee",
+    "plan": "free",
+    "region": "us-east",
+    "seats": 1,
+    "customer_since": "2026-07-12",
+    "preferred_language": "en",
+    "activity_level": "weekly",
+    "account_manager": null,
+    "support_history": [],
+    "notes": ["Attempted upgrade to Pro on 2026-11-12", "First time contacting support"]
+  },
+  {
+    "customer_id": "C-002",
+    "name": "Siam Horizon Co., Ltd.",
+    "plan": "enterprise",
+    "region": "asia-southeast",
+    "seats": 45,
+    "customer_since": "2026-03-12",
+    "preferred_language": "th",
+    "activity_level": "daily",
+    "account_manager": "Napat S.",
+    "support_history": [
+      {"ticket_id": "T-0412", "subject": "SSO setup question", "urgency": "low", "resolved": true},
+      {"ticket_id": "T-0689", "subject": "Add 10 seats to contract", "urgency": "medium", "resolved": true}
+    ],
+    "notes": ["First critical issue for this account"]
+  },
+  {
+    "customer_id": "C-003",
+    "name": "Sam Rivera",
+    "plan": "pro",
+    "region": "us-west",
+    "seats": 1,
+    "customer_since": "2026-06-12",
+    "preferred_language": "en",
+    "activity_level": "daily",
+    "account_manager": null,
+    "support_history": [],
+    "notes": ["Uses the macOS desktop app v4.1"]
+  }
+]

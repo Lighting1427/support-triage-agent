@@ -1,0 +1,63 @@
+[
+  {
+    "customer_id": "C-001",
+    "subscription_plan": "free",
+    "last_provisioning_error": "2026-11-12T03:58:40Z payment-webhook timeout: Pro plan activation not applied",
+    "transactions": [
+      {
+        "transaction_id": "TX-9001",
+        "created_at": "2026-11-12T03:58:00Z",
+        "amount": "29.99",
+        "status": "captured",
+        "description": "Pro plan - monthly",
+        "card_last4": "4242"
+      },
+      {
+        "transaction_id": "TX-9002",
+        "created_at": "2026-11-12T04:55:00Z",
+        "amount": "29.99",
+        "status": "captured",
+        "description": "Pro plan - monthly",
+        "card_last4": "1881"
+      },
+      {
+        "transaction_id": "TX-9003",
+        "created_at": "2026-11-12T05:30:00Z",
+        "amount": "29.99",
+        "status": "pending",
+        "description": "Pro plan - monthly (automatic payment retry)",
+        "card_last4": "1881"
+      }
+    ]
+  },
+  {
+    "customer_id": "C-002",
+    "subscription_plan": "enterprise",
+    "last_provisioning_error": null,
+    "transactions": [
+      {
+        "transaction_id": "TX-7710",
+        "created_at": "2026-11-01T00:00:00Z",
+        "amount": "2250.00",
+        "status": "captured",
+        "description": "Enterprise plan - 45 seats - monthly",
+        "card_last4": "5100"
+      }
+    ]
+  },
+  {
+    "customer_id": "C-003",
+    "subscription_plan": "pro",
+    "last_provisioning_error": null,
+    "transactions": [
+      {
+        "transaction_id": "TX-8120",
+        "created_at": "2026-11-12T00:00:00Z",
+        "amount": "29.99",
+        "status": "captured",
+        "description": "Pro plan - monthly",
+        "card_last4": "7007"
+      }
+    ]
+  }
+]

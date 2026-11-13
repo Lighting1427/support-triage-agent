@@ -1,0 +1,38 @@
+[
+  {
+    "region": "asia-southeast",
+    "component": "web-app",
+    "health": "outage",
+    "error_rate_5xx": 0.38,
+    "degraded_since": "2026-11-12T04:55:00Z",
+    "public_status_page": "operational",
+    "open_incident_id": null
+  },
+  {
+    "region": "us-east",
+    "component": "web-app",
+    "health": "operational",
+    "error_rate_5xx": 0.002,
+    "degraded_since": null,
+    "public_status_page": "operational",
+    "open_incident_id": null
+  },
+  {
+    "region": "us-west",
+    "component": "web-app",
+    "health": "operational",
+    "error_rate_5xx": 0.001,
+    "degraded_since": null,
+    "public_status_page": "operational",
+    "open_incident_id": null
+  },
+  {
+    "region": "global",
+    "component": "payment-webhooks",
+    "health": "degraded",
+    "error_rate_5xx": 0.12,
+    "degraded_since": "2026-11-12T03:50:00Z",
+    "public_status_page": "operational",
+    "open_incident_id": null
+  }
+]
